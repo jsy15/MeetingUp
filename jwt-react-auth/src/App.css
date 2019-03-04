@@ -22,3 +22,13 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+.eventname {
+  resize: none;
+  background-color: coral;
+}
+
+.eventdescription {
+  resize: none;
+  color: #ff0000;
+}

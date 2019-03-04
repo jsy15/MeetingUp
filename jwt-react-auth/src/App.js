@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+// eslint-disable-next-line
 import logo from './logo.svg';
 import './App.css';
 import AuthService from './components/AuthService';
@@ -31,7 +32,7 @@ class App extends Component {
 
   addEvents = _ => {
     const { event } = this.state;
-    Auth.fetch1(`http://localhost:4000/events/add?name=${event.name}&description=${event.description}&creator_id=1`)
+    Auth.fetch1(`http://localhost:8080/events/add?name=${event.name}&description=${event.description}&creator_id=1`)
       .then(this.getEvents)
       .catch(err => console.error(err))
   }
@@ -46,7 +47,7 @@ class App extends Component {
 getTest = _ => {
   //var messagetest = "";
   console.log('tripped');
-  Auth.fetch('http://localhost:8080/testroute')
+  Auth.fetch1('http://localhost:8080/testroute')
   .then(response => {
     console.log(response["test1"]);
     var messagetest = response["test1"];
@@ -85,17 +86,15 @@ testFunc(){
 
     return (
       <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
           <h2>Welcome {this.props.user.username}</h2>
-        </div>
-        <p className="App-intro">
           <button type="button" className="form-submit" onClick={this.handleLogout.bind(this)}>Logout</button>
           <button type="button" onClick={this.testFunc}>Click this to test</button>
+          <br></br>
+          <textarea className="eventname" rows="10" cols="50" placeholder={event.name} onChange={e => this.setState({ event: { ...event, name: e.target.value}})}></textarea>
+          <textarea className="eventdescription" rows="10" cols="50" placeholder={event.description} onChange={e => this.setState({event: { ...event, description: e.target.value}})}></textarea>
+          <button onClick={this.addEvents}>Add Event</button>
           <div id="hailmarry2">This will be replaced</div>
           <div>{events.map(this.renderEvent)}</div>
-
-        </p>
       </div>
     );
   }

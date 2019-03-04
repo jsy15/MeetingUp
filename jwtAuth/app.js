@@ -17,6 +17,11 @@ const mysql = require('mysql');
 // Instantiating the express app
 const app = express();
 
+
+const SELECT_ALL_EVENTS_QUERY ='SELECT * FROM events';
+const SELECT_ALL_USERS_QUERY = 'SELECT fname, lname, username FROM users';
+
+
 app.use(cors());
 
 const connection = mysql.createConnection({
@@ -105,6 +110,69 @@ app.get('/events', jwtMW, (req, res) => {
         }
     });
 });
+
+app.get('/events/add', jwtMW, (req, res) => {
+    const { name, description, creator_id } = req.query;
+    const INSERT_EVENTS_QUERY = `INSERT INTO events(name, description, creator_id) VALUES('${name}', '${description}', ${creator_id})`;
+    connection.query(INSERT_EVENTS_QUERY, (err, results) => {
+      if(err) {
+        return res.send(err)
+      }
+      else{
+        return res.send('successful')
+      }
+    });
+  });
+  
+  app.get('/user/verify', jwtMW, (req, res) => {
+    const hashedpassword = md5(req.query.password);
+    const username = req.query.username;
+    const VERIFY_USER_QUERY = `SELECT password from users where username = '${username}'`;
+    connection.query(VERIFY_USER_QUERY, (err, results) =>{
+      if(err) {
+        return res.send(err)
+      }
+      else if(results.length > 0){
+        if(results[0].password == `${hashedpassword}`){
+          res.send('verified')
+        }
+        else{
+          res.send('unverified')
+        }
+      }
+      else{
+        res.send('unverified')
+      }
+    });
+  });
+
+  app.get('/users', jwtMW, (req, res) => {
+    connection.query(SELECT_ALL_USERS_QUERY, (err, results) => {
+      if(err) {
+        return res.send(err)
+      }
+      else{
+        return res.json({
+          data: results
+        })
+      }
+    });
+  });
+  
+  app.get('/users/add', jwtMW, (req, res) => {
+    const { password, lname, uname, username } = req.query;
+    const INSERT_USERS_QUERY = `INSERT INTO users(password, lname, uname, username) VALUES('password', 'lname', 'uname', 'username')`;
+    connection.query(INSERT_USERS_QUERY, (err, results) => {
+      if(err) {
+        return res.send(err)
+      }
+      else{
+        return res.json({
+          data: results
+        })
+      }
+    });
+  });
 
 
 app.get('/', jwtMW /* Using the express jwt MW here */, (req, res) => {
