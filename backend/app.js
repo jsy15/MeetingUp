@@ -13,7 +13,7 @@ const jwt = require('jsonwebtoken');
 const exjwt = require('express-jwt');
 const cors = require('cors');
 const mysql = require('mysql');
-const md5 = require('md5');
+  const md5 = require('md5');
 
 // Instantiating the express app
 const app = express();
@@ -175,8 +175,22 @@ app.get('/events/add', jwtMW, (req, res) => {
       }
     });
   });
+
+  app.get('/userscheck', (req, res) => {
+    const { password, fname, lname, username } = req.query;
+    const USER_CHECK = `INSERT INTO users (password, fname, lname, username) VALUES ('${password}', '${fname}', '${lname}', '${username}')`;
+    console.log(`${USER_CHECK}`);
+    connection.query(USER_CHECK, (err, results) => {
+      if(err) {
+        return res.send("User already exists");
+      }
+      else{
+        return res.send(`Added user: ${username}`);
+      }
+    });
+  });
   
-  app.get('/users/add', jwtMW, (req, res) => {
+  app.get('/users/add', (req, res) => {
     const { password, lname, uname, username } = req.query;
     const INSERT_USERS_QUERY = `INSERT INTO users(password, lname, uname, username) VALUES('password', 'lname', 'uname', 'username')`;
     connection.query(INSERT_USERS_QUERY, (err, results) => {

@@ -51,3 +51,23 @@
    opacity: 0.6;
 }
 
+.createaccountwrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.createaccount {
+    background-color: #1abc9c;
+    color: white;   
+  }
+
+.createalert {
+    color: red;
+}
+
+.createalertsuccess {
+    color: green;
+}
+
+  

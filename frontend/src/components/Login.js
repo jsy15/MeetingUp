@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+// eslint-disable-next-line
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import './Login.css';
 import AuthService from './AuthService';
 
@@ -8,6 +10,7 @@ class Login extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
         this.Auth = new AuthService();
+        this.goToCreate = this.goToCreate.bind(this);
     }
     componentWillMount(){
         if(this.Auth.loggedIn())
@@ -39,11 +42,18 @@ class Login extends Component {
                             type="submit"
                         />
                     </form>
+                    <br></br>
+                    <div className="createaccountwrapper">
+                        <button className="createaccount" onClick={this.goToCreate}>Create Account</button>
+                    </div>
                 </div>
-                <button className="createaccount">Create Account</button>
             </div>
             
         );
+    }
+
+    goToCreate(){
+        this.props.history.replace('createaccount');
     }
 
     handleFormSubmit(e){
@@ -65,6 +75,10 @@ class Login extends Component {
                 [e.target.name]: e.target.value
             }
         )
+    }
+
+    handleCreateAccount(){
+               this.props.history.replace('/');
     }
     
 }

@@ -7,12 +7,14 @@ import { Route, BrowserRouter as Router } from 'react-router-dom';
 
 // Our Components
 import Login from './components/Login';
+import CreateAcc from './components/CreateAccount';
 
 ReactDOM.render(
     <Router>
         <div>
             <Route exact path="/" component={App} />
             <Route exact path="/login" component={Login} />
+            <Route exact path="/createaccount" component={CreateAcc} />
         </div>
     </Router>
     , document.getElementById('root')
