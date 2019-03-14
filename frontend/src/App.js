@@ -30,7 +30,7 @@ class App extends Component {
 
   addEvents = _ => {
     const { event } = this.state;
-    Auth.fetch1(`http://localhost:8080/events/add?name=${event.name}&description=${event.description}&creator_id=1`)
+    Auth.fetch1(`http://localhost:8080/events/add?name=${event.name}&description=${event.description}&creator_id=${this.props.user.id}`)
       .then(this.getEvents)
       .catch(err => console.error(err))
   }
