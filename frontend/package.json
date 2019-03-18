@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "ajv": "^6.10.0",
+    "babel-standalone": "^6.26.0",
     "bootstrap": "^4.3.1",
     "jquery": "^1.12.4",
     "jwt-decode": "^2.2.0",

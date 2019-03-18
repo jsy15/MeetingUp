@@ -3,6 +3,10 @@ import './App.css';
 import AuthService from './components/AuthService';
 import withAuth from './components/withAuth';
 import ReactDOM from 'react-dom';
+import Table from 'react-bootstrap/Table';
+import Navbar from 'react-bootstrap/Navbar';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 const Auth = new AuthService();
 
 var texthold = "Ha Ha Ha Ha I got it baby";
@@ -39,7 +43,7 @@ class App extends Component {
     
   }
 
-  renderEvent = ({ event_id, name, description }) => <div key={event_id}>{name} || {description}</div>
+  renderEvent = ({ event_id, name, description }) => <tr> <th key={event_id}>{name} </th><th> {description}</th> </tr>
 
 
 getTest = _ => {
@@ -84,7 +88,17 @@ testFunc(){
 
     return (
       <div className="App">
-          <h2>Welcome {this.props.user.username}</h2>
+        <Navbar bg="light" expand="lg">
+          <Navbar.Brand>MeetUp</Navbar.Brand>
+          <Navbar.Collapse className="justify-content-end">
+            <Navbar.Text className="justify-content-end">
+                Signed in as: {this.props.user.username}
+            </Navbar.Text>
+          </Navbar.Collapse>
+          <div className="pl-4">
+            <Button variant="outline-primary" onClick={this.handleLogout.bind(this)}>Logout</Button>
+          </div>
+        </Navbar>
           <button type="button" className="form-submit" onClick={this.handleLogout.bind(this)}>Logout</button>
           <button type="button" onClick={this.testFunc}>Click this to test</button>
           <br></br>
@@ -92,7 +106,17 @@ testFunc(){
           <textarea className="eventdescription" rows="10" cols="50" placeholder={event.description} onChange={e => this.setState({event: { ...event, description: e.target.value}})}></textarea>
           <button onClick={this.addEvents}>Add Event</button>
           <div id="hailmarry2">This will be replaced</div>
-          <div>{events.map(this.renderEvent)}</div>
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>Event Name</th>
+                <th>Event Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {events.map(this.renderEvent)}
+            </tbody>
+          </Table>
       </div>
     );
   }

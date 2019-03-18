@@ -32,3 +32,18 @@
   resize: none;
   color: #ff0000;
 }
+
+.eventsTable {
+  margin: auto;
+  width: 50%;
+}
+
+.scrollTable {
+  overflow-y: scroll;
+  height: 430px;
+  width: 100%;
+}
+
+.tableall {
+  width: 100%;
+}
