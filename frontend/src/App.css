@@ -26,12 +26,12 @@
 
 .eventname {
   resize: none;
-  background-color: coral;
+  background-color: darkseagreen;
 }
 
 .eventdescription {
   resize: none;
-  color: #ff0000;
+  background-color: darkseagreen;
 }
 
 .eventsTable {
@@ -61,4 +61,22 @@
 .logout {
   color: black;
   background-color: black;
+}
+
+.modal-body
+{
+  background-color: olive !important;
+  border-color: olive !important;
+  text-align: center;
+}
+
+.modal-header {
+  border-color: olive !important;
+  background-color: olive !important;
+  text-align: center;
+}
+
+.modal-footer {
+  background-color: olive !important;
+  border-color: olive !important;
 }

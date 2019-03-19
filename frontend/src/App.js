@@ -138,10 +138,10 @@ handleShow() {
 
           <Modal show={this.state.show} onHide={this.handleClose}>
             <Modal.Header closeButton>
-              <Modal.Title>Modal heading</Modal.Title>
+              <Modal.Title>Creating an event:</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <textarea className="eventname" id="eventNameText" rows="10" cols="50" placeholder="Put Event Name Here" onChange={e => this.setState({ event: { ...event, name: e.target.value}})}></textarea>
+              <textarea className="eventname" id="eventNameText" rows="2" cols="50" placeholder="Put Event Name Here" onChange={e => this.setState({ event: { ...event, name: e.target.value}})}></textarea>
               <textarea className="eventdescription" id="eventDescText" rows="10" cols="50" placeholder="Put Event Description Here" onChange={e => this.setState({event: { ...event, description: e.target.value}})}></textarea>
             </Modal.Body>
             <Modal.Footer>
@@ -153,7 +153,7 @@ handleShow() {
 
           <br/>
           <Button variant="primary" onClick={this.handleShow}>
-            Launch demo modal
+            Create Event
           </Button>
 
 
