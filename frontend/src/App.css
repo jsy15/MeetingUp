@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  background-color: darkseagreen;
 }
 
 .App-logo {
@@ -46,4 +47,18 @@
 
 .tableall {
   width: 100%;
+}
+
+.navbarcust {
+  background-color: darkolivegreen !important;
+}
+
+.navbar,
+.navbar-default {
+  background-image: linear-gradient(to bottom, #77914b 0, #77914b 100%) !important;
+}
+
+.logout {
+  color: black;
+  background-color: black;
 }

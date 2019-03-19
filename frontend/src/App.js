@@ -13,13 +13,27 @@ var texthold = "Ha Ha Ha Ha I got it baby";
 var texthold2 = "";
 
 class App extends Component {
-  state = {
-    events: [],
-    event: {
-      name: 'Put your event name here',
-      description: 'Put some information about your event here',
-    }
+
+  constructor(props, context) {
+    super(props, context);
+
+    this.handleShow = this.handleShow.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+
+    this.state = {
+      changed: false,
+      eventnametexthere: "",
+      eventdesctexthere: "",
+      show: false,
+      events: [],
+      event: {
+        name: '',
+        description: '',
+      }
+    };
   }
+
+  
 
   componentDidMount() {
     this.getEvents();
@@ -33,10 +47,23 @@ class App extends Component {
   }
 
   addEvents = _ => {
-    const { event } = this.state;
+    var { event } = this.state;
+    // eslint-disable-next-line
+    if(event.name == ""){
+      this.handleClose();
+      this.setState({ event: { ...event, name: "", description: ""}});
+      alert("Unable to create event without name");
+      return;
+    }
+    // eslint-disable-next-line
+    if(event.description == ""){
+      event.description = "no description given";
+    }
     Auth.fetch1(`http://localhost:8080/events/add?name=${event.name}&description=${event.description}&creator_id=${this.props.user.id}`)
       .then(this.getEvents)
       .catch(err => console.error(err))
+    this.handleClose();
+    this.setState({ event: { ...event, name: "", description: ""}});
   }
 
   verifyUser = _ => {
@@ -83,12 +110,20 @@ testFunc(){
   ReactDOM.render(element, document.getElementById('hailmarry2'));
 }
 
+handleClose() {
+  this.setState({ show: false });
+}
+
+handleShow() {
+  this.setState({ show: true });
+}
+
   render() {
     const { events, event} = this.state;
 
     return (
       <div className="App">
-        <Navbar bg="light" expand="lg">
+        <Navbar bg="light" expand="lg" className="navbarcust">
           <Navbar.Brand>MeetUp</Navbar.Brand>
           <Navbar.Collapse className="justify-content-end">
             <Navbar.Text className="justify-content-end">
@@ -96,16 +131,32 @@ testFunc(){
             </Navbar.Text>
           </Navbar.Collapse>
           <div className="pl-4">
-            <Button variant="outline-primary" onClick={this.handleLogout.bind(this)}>Logout</Button>
+            <Button className="logout" variant="outline-dark" onClick={this.handleLogout.bind(this)}>Logout</Button>
           </div>
         </Navbar>
-          <button type="button" className="form-submit" onClick={this.handleLogout.bind(this)}>Logout</button>
-          <button type="button" onClick={this.testFunc}>Click this to test</button>
-          <br></br>
-          <textarea className="eventname" rows="10" cols="50" placeholder={event.name} onChange={e => this.setState({ event: { ...event, name: e.target.value}})}></textarea>
-          <textarea className="eventdescription" rows="10" cols="50" placeholder={event.description} onChange={e => this.setState({event: { ...event, description: e.target.value}})}></textarea>
-          <button onClick={this.addEvents}>Add Event</button>
-          <div id="hailmarry2">This will be replaced</div>
+          
+
+          <Modal show={this.state.show} onHide={this.handleClose}>
+            <Modal.Header closeButton>
+              <Modal.Title>Modal heading</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <textarea className="eventname" id="eventNameText" rows="10" cols="50" placeholder="Put Event Name Here" onChange={e => this.setState({ event: { ...event, name: e.target.value}})}></textarea>
+              <textarea className="eventdescription" id="eventDescText" rows="10" cols="50" placeholder="Put Event Description Here" onChange={e => this.setState({event: { ...event, description: e.target.value}})}></textarea>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="primary" onClick={this.addEvents}>
+                Create Event
+              </Button>
+            </Modal.Footer>
+          </Modal>
+
+          <br/>
+          <Button variant="primary" onClick={this.handleShow}>
+            Launch demo modal
+          </Button>
+
+
           <Table striped bordered hover>
             <thead>
               <tr>
@@ -117,6 +168,7 @@ testFunc(){
               {events.map(this.renderEvent)}
             </tbody>
           </Table>
+
       </div>
     );
   }
