@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-// eslint-disable-next-line
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import './Login.css';
 import withAuth from './withAuth';
 
