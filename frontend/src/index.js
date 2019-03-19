@@ -9,6 +9,7 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 // Our Components
 import Login from './components/Login';
 import CreateAcc from './components/CreateAccount';
+import event from './components/Event';
 
 ReactDOM.render(
     <Router>
@@ -16,6 +17,7 @@ ReactDOM.render(
             <Route exact path="/" component={App} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/createaccount" component={CreateAcc} />
+            <Route exact path="/event/:eventID" component={event} />
         </div>
     </Router>
     , document.getElementById('root')

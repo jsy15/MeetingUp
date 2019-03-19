@@ -7,7 +7,8 @@ export default function withAuth(AuthComponent) {
         constructor() {
             super();
             this.state = {
-                user: null
+                user: null,
+                params: null
             }
         }
         componentWillMount() {
@@ -31,7 +32,7 @@ export default function withAuth(AuthComponent) {
         render() {
             if (this.state.user) {
                 return (
-                    <AuthComponent history={this.props.history} user={this.state.user} />
+                    <AuthComponent history={this.props.history} user={this.state.user} params={this.props.match.params}/>
                 )
             }
             else {

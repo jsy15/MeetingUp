@@ -19,6 +19,7 @@ class App extends Component {
 
     this.handleShow = this.handleShow.bind(this);
     this.handleClose = this.handleClose.bind(this);
+    this.showEvent = this.showEvent.bind(this);
 
     this.state = {
       changed: false,
@@ -33,12 +34,15 @@ class App extends Component {
     };
   }
 
-  
-
   componentDidMount() {
     this.getEvents();
   }
     
+  showEvent() {
+    var hold = document.getElementById('testtext').value;
+    this.props.history.push(`/event/${hold}`);
+  }
+
   getEvents = _ => {
     Auth.fetch1('http://localhost:8080/events')
       .then(response => response.json())
@@ -134,6 +138,9 @@ handleShow() {
             <Button className="logout" variant="outline-dark" onClick={this.handleLogout.bind(this)}>Logout</Button>
           </div>
         </Navbar>
+
+        <input id="testtext"></input>
+        <button onClick={this.showEvent}>Test Button</button>
           
 
           <Modal show={this.state.show} onHide={this.handleClose}>
