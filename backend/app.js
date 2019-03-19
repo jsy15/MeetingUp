@@ -75,10 +75,6 @@ app.post('/login', (req, res) => {
             validated = true;
             dataUsername = results[0].username;
             dataId = results[0].user_id;
-            console.log("Database information");
-            console.log(dataUsername);
-            console.log(dataId);
-            console.log(validated);
 
               // Finds first username and password match in users array (assumes usernames are unique)
               //var user = users.find(u => username == u.username && password == u.password);
@@ -179,7 +175,6 @@ app.get('/events/add', jwtMW, (req, res) => {
   app.get('/userscheck', (req, res) => {
     const { password, fname, lname, username } = req.query;
     const USER_CHECK = `INSERT INTO users (password, fname, lname, username) VALUES ('${password}', '${fname}', '${lname}', '${username}')`;
-    console.log(`${USER_CHECK}`);
     connection.query(USER_CHECK, (err, results) => {
       if(err) {
         return res.send("User already exists");
