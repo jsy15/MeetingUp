@@ -200,6 +200,57 @@ app.get('/events/add', jwtMW, (req, res) => {
     });
   });
 
+  app.get('/event/id', jwtMW, (req, res) => {
+    console.log(req.query);
+    if(req.query.event_id){
+      const { event_id } = req.query;
+      const GET_EVENT_QUERY = `SELECT * FROM events WHERE event_id = ${event_id}`;
+      console.log(GET_EVENT_QUERY);
+      connection.query(GET_EVENT_QUERY, (err, results) => {
+        if (err) {
+          res.send("Unable to find event");
+        }
+        else {
+          return res.json({
+            data:results
+          })
+        }
+      });
+    }
+    else if(req.query.creator_id){
+      const { creator_id } = req.query;
+      const GET_CREATOR_QUERY = `SELECT username FROM users WHERE user_id = ${creator_id}`;
+      console.log(GET_CREATOR_QUERY);
+      connection.query(GET_CREATOR_QUERY, (err, results) => {
+        if (err) {
+          res.send("Unable to find creator");
+        }
+        else {
+          return res.json({
+            data:results
+          })
+        }
+      });
+    }
+    
+  });
+
+  app.get('/event/attending', jwtMW, (req, res) => {
+    const { event_id } = req.query;
+    const GET_ATTENDING_QUERY = `SELECT username, users.user_id as user_id FROM attending INNER JOIN users ON users.user_id = attending.user_id WHERE attending.event_id = ${event_id}`;
+    console.log(GET_ATTENDING_QUERY);
+    connection.query(GET_ATTENDING_QUERY, (err, results) => {
+      if(err){
+        res.send("Unable to results");
+      }
+      else {
+        return res.json({
+          data:results
+        })
+      }
+    });
+  });
+
 
 app.get('/', jwtMW /* Using the express jwt MW here */, (req, res) => {
     res.send('You are authenticated'); //Sending some response when authenticated
@@ -215,7 +266,7 @@ app.use(function (err, req, res, next) {
     }
 });
 
-// Starting the app on PORT 3000
+// Starting the app on PORT 8080
 const PORT = 8080;
 app.listen(PORT, () => {
     // eslint-disable-next-line

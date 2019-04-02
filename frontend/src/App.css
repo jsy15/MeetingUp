@@ -80,3 +80,24 @@
   background-color: olive !important;
   border-color: olive !important;
 }
+
+.eventparent {
+  display: flex;
+}
+
+.eventinfo {
+  width: 75%;
+}
+
+.attendingBar {
+  background-color: orange;
+  flex: 1;
+}
+
+.homebutton{
+  cursor: pointer !important;
+}
+
+.homebutton:hover{
+  color: red !important;
+}
