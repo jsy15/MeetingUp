@@ -7,6 +7,8 @@ import Table from 'react-bootstrap/Table';
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import Tooltip from 'react-bootstrap/Tooltip';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 const Auth = new AuthService();
 
 var texthold = "Ha Ha Ha Ha I got it baby";
@@ -20,6 +22,7 @@ class App extends Component {
     this.handleShow = this.handleShow.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.showEvent = this.showEvent.bind(this);
+    this.checkPrivate = this.checkPrivate.bind(this);
 
     this.state = {
       changed: false,
@@ -30,7 +33,8 @@ class App extends Component {
       event: {
         name: '',
         description: '',
-      }
+      },
+      is_private_state: false,
     };
   }
 
@@ -50,7 +54,12 @@ class App extends Component {
   }
 
   addEvents = _ => {
-    var { event } = this.state;
+    var { event, is_private_state } = this.state;
+    if(is_private_state == false)
+      var is_private = 0;
+    else
+      var is_private = 1;
+
     // eslint-disable-next-line
     if(event.name == ""){
       this.handleClose();
@@ -62,11 +71,12 @@ class App extends Component {
     if(event.description == ""){
       event.description = "no description given";
     }
-    Auth.fetch1(`http://localhost:8080/events/add?name=${event.name}&description=${event.description}&creator_id=${this.props.user.id}`)
+    Auth.fetch1(`http://localhost:8080/events/add?name=${event.name}&description=${event.description}&private=${is_private}&creator_id=${this.props.user.id}`)
       .then(this.getEvents)
       .catch(err => console.error(err))
     this.handleClose();
     this.setState({ event: { ...event, name: "", description: ""}});
+    this.setState({ is_private_state: false});
   }
 
   verifyUser = _ => {
@@ -76,7 +86,7 @@ class App extends Component {
   renderEvent = ({ event_id, name, description, isprivate, creator_id }) => {
     if(this.props.user.id == creator_id && isprivate == 1)
       return <tr onClick={this.showEvent.bind(this, event_id)}> <th key={event_id}>{name} </th><th> {description}</th> </tr>
-    else if(isprivate == null)
+    else if(isprivate == null || isprivate == 0)
       return <tr onClick={this.showEvent.bind(this, event_id)}> <th key={event_id}>{name} </th><th> {description}</th> </tr>
 }
 
@@ -126,6 +136,27 @@ handleShow() {
   this.setState({ show: true });
 }
 
+renderTooltip = props => (
+  <div
+    {...props}
+    style={{
+      backgroundColor: 'rgba(0, 0, 0, 0.85)',
+      padding: '2px 10px',
+      color: 'white',
+      zIndex: 50000,
+      borderRadius: 3,
+      ...props.style,
+    }}
+  >
+    Click this if the event should be private.
+  </div>
+);
+
+checkPrivate(){
+  console.log(this.state.is_private_state);
+}
+
+
   render() {
     const { events, event} = this.state;
 
@@ -141,11 +172,7 @@ handleShow() {
           <div className="pl-4">
             <Button className="logout" variant="outline-dark" onClick={this.handleLogout.bind(this)}>Logout</Button>
           </div>
-        </Navbar>
-
-        <input id="testtext"></input>
-        <button onClick={this.showEvent}>Test Button</button>
-          
+        </Navbar>         
 
           <Modal show={this.state.show} onHide={this.handleClose}>
             <Modal.Header closeButton>
@@ -154,6 +181,14 @@ handleShow() {
             <Modal.Body>
               <textarea className="eventname" id="eventNameText" rows="2" cols="50" placeholder="Put Event Name Here" onChange={e => this.setState({ event: { ...event, name: e.target.value}})}></textarea>
               <textarea className="eventdescription" id="eventDescText" rows="10" cols="50" placeholder="Put Event Description Here" onChange={e => this.setState({event: { ...event, description: e.target.value}})}></textarea>
+              <OverlayTrigger
+                placement="bottom-right"
+                delay={{ show: 0, hide: 0 }}
+                overlay={this.renderTooltip}
+              >
+                <div className="privatetooltip"><input type="checkbox" className="eventprivate" id="eventPrivateCheck" onClick={e => this.setState({is_private_state: e.target.checked})}></input> Private? </div>
+              </OverlayTrigger>
+
             </Modal.Body>
             <Modal.Footer>
               <Button variant="primary" onClick={this.addEvents}>

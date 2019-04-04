@@ -26,7 +26,6 @@ class Event extends Component {
       }
 
     componentDidMount () {
-        console.log(this.props);
         const { eventID } = this.props.params;
         this.setState({eventid: eventID});
         this.getEvents();
@@ -43,7 +42,6 @@ class Event extends Component {
 
     getEvents() {
         var event_id = this.props.params.eventID;
-        console.log(event_id + "<-event"); 
         Auth.fetch1(`http://localhost:8080/event/id?event_id=${event_id}`)
         .then(response => response.json())
         .then(response => {
@@ -63,7 +61,6 @@ class Event extends Component {
         .then(response => response.json())
         .then(response => {
             this.setState({ creator_name: response.data[0].username }, () =>{
-                console.log("Callback for username: " + this.state.creator_name);
             });
         })
     }
@@ -72,12 +69,11 @@ class Event extends Component {
         Auth.fetch1(`http://localhost:8080/event/attending?event_id=${this.props.params.eventID}`)
         .then(response => response.json())
         .then(response => {
-            console.log(response.data.length);
             if(response.data.length <= 0){
                 console.log("This event has no attenders and needs to be fixed in the database");
             }
             else{
-                console.log("This event has " + response.data.length + " attendees");
+                console.log("This event has " , response.data.length , " attendees");
                 this.setState({event_attendees: response.data});
             }
         })
@@ -114,7 +110,6 @@ class Event extends Component {
                         </div>
                         <div className="attendingbarparent">
                             <div className="attendingBar">{event_attendees.map(this.renderEvent)}
-                            This is some text
                             </div>
                         </div>
                     </div>
