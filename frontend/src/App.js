@@ -9,6 +9,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import bellicon from './images/bell-alarm-symbol.svg';
+import { showInvites } from './components/notifcation.js';
 const Auth = new AuthService();
 
 var texthold = "Ha Ha Ha Ha I got it baby";
@@ -157,9 +158,7 @@ checkPrivate(){
   console.log(this.state.is_private_state);
 }
 
-showInvites(){
-  alert("Showing invites");
-}
+
 
 
   render() {
@@ -172,7 +171,7 @@ showInvites(){
           <Navbar.Brand>MeetUp</Navbar.Brand>
           <Navbar.Collapse className="justify-content-end">
             <Navbar.Text className="justify-content-end">
-              <img src={bellicon} className="notificationicon" alt="logo" onClick={this.showInvites}></img>
+              <img src={bellicon} className="notificationicon" alt="logo" onClick={showInvites.bind(this, this.props.user.username)}></img>
                 Signed in as: {this.props.user.username}
             </Navbar.Text>
           </Navbar.Collapse>

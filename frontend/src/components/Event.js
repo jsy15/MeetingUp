@@ -4,6 +4,8 @@ import withAuth from './withAuth';
 import AuthService from './AuthService';
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
+import bellicon from '../images/bell-alarm-symbol.svg';
+import { showInvites } from './notifcation.js';
 const Auth = new AuthService();
 
 class Event extends Component {
@@ -144,6 +146,7 @@ class Event extends Component {
                     <Navbar.Brand onClick={this.goHome} className="homebutton">MeetUp</Navbar.Brand>
                     <Navbar.Collapse className="justify-content-end">
                         <Navbar.Text className="justify-content-end">
+                        <img src={bellicon} className="notificationicon" alt="logo" onClick={showInvites.bind(this, this.props.user.username)}></img>
                             Signed in as: {this.props.user.username}
                         </Navbar.Text>
                     </Navbar.Collapse>
