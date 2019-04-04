@@ -295,7 +295,44 @@ app.get('/events/add', jwtMW, (req, res) => {
         return res.send("No results for that username");
       }
     });
-  })
+  });
+
+  app.get('/invite/show', jwtMW, (req, res) => {
+    const { user_id } = req.query;
+    const GET_INVITES_BY_USERID_QUERY = `SELECT username, name, invited_user_id, sender_user_id, events.event_id, invite_id FROM (SELECT * FROM (SELECT * FROM invitelist) as invite, (SELECT user_id, username FROM users) as user WHERE invite.sender_user_id = user.user_id) as inviteuser, (SELECT event_id, name FROM events) as events where inviteuser.event_id = events.event_id && invited_user_id = ${user_id};`;
+    connection.query(GET_INVITES_BY_USERID_QUERY, (err, results) => {
+      if (err) {
+        res.send(err);      
+      }
+      else {
+        return res.json({
+          data:results
+        })
+      }
+    });
+  });
+
+  app.get('/invite/accept', (req, res) => {
+    const { invite_id, event_id, user_id } = req.query;
+    const ACCEPT_INVITE_QUERY = `INSERT INTO attending (\`event_id\`, \`user_id\`) VALUES (${event_id}, ${user_id});`;
+    console.log(ACCEPT_INVITE_QUERY);
+    connection.query(ACCEPT_INVITE_QUERY, (err, results) => {
+      if(err) {
+        res.send(err)
+      }
+        else {
+          const REMOVE_OLD_INVITE_QUERY = `DELETE FROM invitelist WHERE invite_id = ${invite_id};`;
+          connection.query(REMOVE_OLD_INVITE_QUERY, (err, results) =>{
+            if(err){
+              res.send(err)
+            }
+            else{
+              res.send("Successfully accepted the invite");
+            }
+          });
+        }
+    });
+  });
 
 app.get('/', jwtMW /* Using the express jwt MW here */, (req, res) => {
     res.send('You are authenticated'); //Sending some response when authenticated

@@ -9,7 +9,6 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import bellicon from './images/bell-alarm-symbol.svg';
-import { showInvites } from './components/notifcation.js';
 const Auth = new AuthService();
 
 var texthold = "Ha Ha Ha Ha I got it baby";
@@ -21,16 +20,21 @@ class App extends Component {
     super(props, context);
 
     this.handleShow = this.handleShow.bind(this);
+    this.handleShow2 = this.handleShow2.bind(this);
     this.handleClose = this.handleClose.bind(this);
+    this.handleClose2 = this.handleClose2.bind(this);
     this.showEvent = this.showEvent.bind(this);
     this.checkPrivate = this.checkPrivate.bind(this);
+    this.getEvents = this.getEvents.bind(this);
 
     this.state = {
       changed: false,
       eventnametexthere: "",
       eventdesctexthere: "",
       show: false,
+      show2: false,
       events: [],
+      invites: [],
       event: {
         name: '',
         description: '',
@@ -41,6 +45,7 @@ class App extends Component {
 
   componentDidMount() {
     this.getEvents();
+    this.getInvites();
   }
     
   showEvent(param, e) {
@@ -85,12 +90,36 @@ class App extends Component {
     
   }
 
+  getInvites () {
+    Auth.fetch1(`http://localhost:8080/invite/show?user_id=${this.props.user.id}`)
+    .then(response => response.json())
+    .then(response => {
+        this.setState({ invites: response.data}, () => {
+          console.log(this.state.invites);
+        });
+    })
+}
+
   renderEvent = ({ event_id, name, description, isprivate, creator_id }) => {
     if(this.props.user.id === creator_id && isprivate === 1)
       return <tr onClick={this.showEvent.bind(this, event_id)}><th key={event_id}>{name}</th><th>{description}</th></tr>
     else if(isprivate === null || isprivate === 0)
       return <tr onClick={this.showEvent.bind(this, event_id)}><th key={event_id}>{name}</th><th>{description}</th></tr>
 }
+
+renderInvites = ({username, name, invite_id, event_id, invited_user_id}) => {
+  this.getInvites();
+  return <tr onClick={this.acceptInvite.bind(this, invite_id, event_id, invited_user_id)}><th key={invite_id}>You were invited by: {username} to the event: {name}</th></tr>
+}
+
+acceptInvite(param1, param2, param3, e){
+  Auth.fetch1(`http://localhost:8080/invite/accept?invite_id=${param1}&event_id=${param2}&user_id=${param3}`)
+  .then(response => response.text())
+  .then(response => alert(response))
+  .then(this.getInvites())
+  .then(this.handleClose2())
+}
+
 
 
 getTest = _ => {
@@ -138,6 +167,14 @@ handleShow() {
   this.setState({ show: true });
 }
 
+handleClose2() {
+  this.setState({ show2: false });
+}
+
+handleShow2() {
+  this.setState({ show2: true });
+}
+
 renderTooltip = props => (
   <div
     {...props}
@@ -162,7 +199,7 @@ checkPrivate(){
 
 
   render() {
-    const { events, event} = this.state;
+    const { events, event, invites} = this.state;
 
     return (
       <div className="App">
@@ -171,14 +208,14 @@ checkPrivate(){
           <Navbar.Brand>MeetUp</Navbar.Brand>
           <Navbar.Collapse className="justify-content-end">
             <Navbar.Text className="justify-content-end">
-              <img src={bellicon} className="notificationicon" alt="logo" onClick={showInvites.bind(this, this.props.user.username)}></img>
+              <img src={bellicon} className="notificationicon" alt="logo"></img>
                 Signed in as: {this.props.user.username}
             </Navbar.Text>
           </Navbar.Collapse>
           <div className="pl-4">
             <Button className="logout" variant="outline-dark" onClick={this.handleLogout.bind(this)}>Logout</Button>
           </div>
-        </Navbar>         
+        </Navbar>
 
           <Modal show={this.state.show} onHide={this.handleClose}>
             <Modal.Header closeButton>
@@ -207,7 +244,30 @@ checkPrivate(){
           <Button variant="primary" onClick={this.handleShow}>
             Create Event
           </Button>
+          <Button variant="primary" onClick={this.handleShow2}>
+            Show Invites
+          </Button>
 
+          <Modal show={this.state.show2} onHide={this.handleClose2}>
+            <Modal.Body className="modal-body-invite">
+              <Table striped borderd hover>
+                <thead>
+                  <tr>
+                    <th>
+                      Invites
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {invites.map(this.renderInvites)}
+                </tbody>
+              </Table>
+            </Modal.Body>
+            <Modal.Footer className="modal-footer-invite">
+              <Button variant="success" onClick={this.handleClose2}>Close Invites</Button>
+            </Modal.Footer>
+          </Modal>
+          
 
           <Table striped bordered hover>
             <thead>
