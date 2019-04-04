@@ -104,11 +104,11 @@ class Event extends Component {
         var user = prompt("Please enter the username of the user you wish to invite.");
         var alreadyattending = false;
         for(var i = 0; i < this.state.event_attendees.length; i++){
-            if(user == this.state.event_attendees[i].username){
+            if(user === this.state.event_attendees[i].username){
                 alreadyattending = true;
             }
         }
-        if(this.props.user.username == user)
+        if(this.props.user.username === user)
             alert("You cannot invite yourself to the event");
         else if (alreadyattending){
             alert("You cannout invite a user that is already attending");
@@ -123,10 +123,10 @@ class Event extends Component {
     }
 
     conditionalRender () {
-        if(this.state.creator_id != 0){
+        if(this.state.creator_id !== 0){
             console.log(this.state.event_attendees);
             console.log(this.state.creator_id);
-            if(this.props.user.id == this.state.creator_id)
+            if(this.props.user.id === this.state.creator_id)
                 return <button className="invitepeoplebutton" onClick={this.inviteUser}>Invite People</button>
             else
                 return;

@@ -7,8 +7,8 @@ import Table from 'react-bootstrap/Table';
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import bellicon from './images/bell-alarm-symbol.svg';
 const Auth = new AuthService();
 
 var texthold = "Ha Ha Ha Ha I got it baby";
@@ -55,10 +55,11 @@ class App extends Component {
 
   addEvents = _ => {
     var { event, is_private_state } = this.state;
-    if(is_private_state == false)
-      var is_private = 0;
+    var is_private = -1;
+    if(is_private_state === false)
+      is_private = 0;
     else
-      var is_private = 1;
+      is_private = 1;
 
     // eslint-disable-next-line
     if(event.name == ""){
@@ -84,10 +85,10 @@ class App extends Component {
   }
 
   renderEvent = ({ event_id, name, description, isprivate, creator_id }) => {
-    if(this.props.user.id == creator_id && isprivate == 1)
-      return <tr onClick={this.showEvent.bind(this, event_id)}> <th key={event_id}>{name} </th><th> {description}</th> </tr>
-    else if(isprivate == null || isprivate == 0)
-      return <tr onClick={this.showEvent.bind(this, event_id)}> <th key={event_id}>{name} </th><th> {description}</th> </tr>
+    if(this.props.user.id === creator_id && isprivate === 1)
+      return <tr onClick={this.showEvent.bind(this, event_id)}><th key={event_id}>{name}</th><th>{description}</th></tr>
+    else if(isprivate === null || isprivate === 0)
+      return <tr onClick={this.showEvent.bind(this, event_id)}><th key={event_id}>{name}</th><th>{description}</th></tr>
 }
 
 
@@ -156,16 +157,22 @@ checkPrivate(){
   console.log(this.state.is_private_state);
 }
 
+showInvites(){
+  alert("Showing invites");
+}
+
 
   render() {
     const { events, event} = this.state;
 
     return (
       <div className="App">
+      
         <Navbar bg="light" expand="lg" className="navbarcust">
           <Navbar.Brand>MeetUp</Navbar.Brand>
           <Navbar.Collapse className="justify-content-end">
             <Navbar.Text className="justify-content-end">
+              <img src={bellicon} className="notificationicon" alt="logo" onClick={this.showInvites}></img>
                 Signed in as: {this.props.user.username}
             </Navbar.Text>
           </Navbar.Collapse>
@@ -214,7 +221,7 @@ checkPrivate(){
               {events.map(this.renderEvent)}
             </tbody>
           </Table>
-
+          <div>Icons made by <a href="https://www.flaticon.com/authors/rami-mcmin" title="Rami McMin">Rami McMin</a> from <a href="https://www.flaticon.com/" 			    title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" 			    title="Creative Commons BY 3.0">CC 3.0 BY</a></div>
       </div>
     );
   }
