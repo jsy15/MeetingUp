@@ -253,6 +253,49 @@ app.get('/events/add', jwtMW, (req, res) => {
     });
   });
 
+  app.get('/event/checkattending', jwtMW, (req, res) => {
+    const { event_id } = req.query;
+    const GET_ATTENDING_LIST = `SELECT creator_id FROM events WHERE event_id = ${event_id}`;
+    console.log(GET_ATTENDING_LIST);
+    connection.query(GET_ATTENDING_LIST, (err, results) => {
+      if(err){
+        res.send("Query has failed");
+      }
+      else {
+        res.json({
+          data:results
+        })
+      }
+    });
+  });
+
+  app.get('/invite', jwtMW, (req, res) => {
+    const { username, sender, event_id } = req.query;
+    const GET_USERID_FROM_USERNAME_QUERY = `SELECT user_id FROM users WHERE username = '${username}'`;
+    console.log(GET_USERID_FROM_USERNAME_QUERY);
+    connection.query(GET_USERID_FROM_USERNAME_QUERY, (err, results)=>{
+      if(err){
+        return res.send(err);
+      }
+      else if(results.length > 0){
+        var returnnum = results[0].user_id;
+        console.log("The lookup for ", username, " returned the id: " , returnnum);
+        const INVITE_USER_QUERY = `INSERT INTO invitelist (\`invited_user_id\`, \`event_id\`, \`sender_user_id\`) VALUES (${returnnum}, ${event_id}, ${sender})`;
+        console.log(INVITE_USER_QUERY);
+        connection.query(INVITE_USER_QUERY, (err, results)=>{
+          if(err){
+            return res.send(err);
+          }
+          else {
+            return res.send("Successfully invited the user");
+          }
+        });
+      }
+      else{
+        return res.send("No results for that username");
+      }
+    });
+  })
 
 app.get('/', jwtMW /* Using the express jwt MW here */, (req, res) => {
     res.send('You are authenticated'); //Sending some response when authenticated
