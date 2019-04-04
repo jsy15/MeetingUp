@@ -63,6 +63,7 @@ app.post('/login', (req, res) => {
     var dataUsername;
     var dataId;
     var validated;
+    var today = new Date();
     
     // Use your DB ORM logic here to find user and compare password
     connection.query(`SELECT username, password, user_id FROM users WHERE username = '${username}'`, (err, results, rows) => {
@@ -80,6 +81,7 @@ app.post('/login', (req, res) => {
               //var user = users.find(u => username == u.username && password == u.password);
               if (validated) { // User credentials matched (are valid)
                 let token = jwt.sign({ id: dataId, username: dataUsername }, 'keyboard cat 4 ever', { expiresIn: 5000 }); // Sigining the token
+                console.log(dataUsername + " has logged on at: " + today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds());
                 res.json({
                     sucess: true,
                     err: null,

@@ -1,6 +1,14 @@
+html, body {margin:0;padding:0;height:100%;}
+
+
+#root {
+  min-height: 100vh;
+}
+
 .App {
   text-align: center;
   background-color: darkseagreen;
+  display:;
 }
 
 .App-logo {
@@ -82,16 +90,38 @@
 }
 
 .eventparent {
+  height: 90vh;
+  display: -moz-box;
+  display: -webkit-flexbox;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: -moz-flex;
   display: flex;
+  -webkit-flex-direction: row;
+  -moz-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
 }
 
 .eventinfo {
+  height: 100%;
   width: 75%;
+  background-color: blue !important;
 }
 
-.attendingBar {
-  background-color: orange;
-  flex: 1;
+.attendingbarparent {
+  position: relative;
+    -moz-box-flex: 1;
+    -webkit-flex: 1;
+    -moz-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    background-color: red;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;  
 }
 
 .homebutton{
@@ -100,4 +130,23 @@
 
 .homebutton:hover{
   color: red !important;
+}
+
+.eventPageName {
+  background-color: orange;
+}
+
+.eventPageCreator {
+  background-color: purple;
+}
+
+.eventPageDescription {
+  background-color: blue;
+}
+
+.attendingBar {
+  background-color: yellow;
+  position: relative;
+  flex: 1;
+  height: 100%;
 }

@@ -38,9 +38,8 @@ class App extends Component {
     this.getEvents();
   }
     
-  showEvent() {
-    var hold = document.getElementById('testtext').value;
-    this.props.history.push(`/event/${hold}`);
+  showEvent(param, e) {
+    this.props.history.push(`/event/${param}`);    
   }
 
   getEvents = _ => {
@@ -74,7 +73,12 @@ class App extends Component {
     
   }
 
-  renderEvent = ({ event_id, name, description }) => <tr> <th key={event_id}>{name} </th><th> {description}</th> </tr>
+  renderEvent = ({ event_id, name, description, isprivate, creator_id }) => {
+    if(this.props.user.id == creator_id && isprivate == 1)
+      return <tr onClick={this.showEvent.bind(this, event_id)}> <th key={event_id}>{name} </th><th> {description}</th> </tr>
+    else if(isprivate == null)
+      return <tr onClick={this.showEvent.bind(this, event_id)}> <th key={event_id}>{name} </th><th> {description}</th> </tr>
+}
 
 
 getTest = _ => {

@@ -94,24 +94,30 @@ class Event extends Component {
         
             return (
               <div className="App">
-                <Navbar bg="light" expand="lg" className="navbarcust">
-                  <Navbar.Brand onClick={this.goHome} className="homebutton">MeetUp</Navbar.Brand>
-                  <Navbar.Collapse className="justify-content-end">
-                    <Navbar.Text className="justify-content-end">
-                        Signed in as: {this.props.user.username}
-                    </Navbar.Text>
-                  </Navbar.Collapse>
-                  <div className="pl-4">
-                    <Button className="logout" variant="outline-dark" onClick={this.handleLogout.bind(this)}>Logout</Button>
-                  </div>
-                </Navbar>
-                <div className="eventparent">
-                    <div className="eventinfo">
-                        <div className="eventname">Name: {this.state.event_name}</div><div className="eventcreator">By: {this.state.creator_name}</div>
-                        <div className="eventdescription">{this.state.event_description}</div>
+                <div className="AppHeader">
+                    <Navbar bg="light" expand="lg" className="navbarcust">
+                    <Navbar.Brand onClick={this.goHome} className="homebutton">MeetUp</Navbar.Brand>
+                    <Navbar.Collapse className="justify-content-end">
+                        <Navbar.Text className="justify-content-end">
+                            Signed in as: {this.props.user.username}
+                        </Navbar.Text>
+                    </Navbar.Collapse>
+                    <div className="pl-4">
+                        <Button className="logout" variant="outline-dark" onClick={this.handleLogout.bind(this)}>Logout</Button>
                     </div>
-                    <div className="attendingBar">{event_attendees.map(this.renderEvent)}</div>
+                    </Navbar>
                 </div>
+                    <div className="eventparent">
+                        <div className="eventinfo">
+                            <div className="eventPageName">Name: {this.state.event_name}</div><div className="eventPageCreator">By: {this.state.creator_name}</div>
+                            <div className="eventPageDescription">{this.state.event_description}</div>
+                        </div>
+                        <div className="attendingbarparent">
+                            <div className="attendingBar">{event_attendees.map(this.renderEvent)}
+                            This is some text
+                            </div>
+                        </div>
+                    </div>
               </div>
             );
           }
