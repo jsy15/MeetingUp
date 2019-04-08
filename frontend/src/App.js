@@ -208,7 +208,7 @@ checkPrivate(){
           <Navbar.Brand>MeetUp</Navbar.Brand>
           <Navbar.Collapse className="justify-content-end">
             <Navbar.Text className="justify-content-end">
-              <img src={bellicon} className="notificationicon" alt="logo"></img>
+              <img src={bellicon} className="notificationicon" alt="logo" onClick={this.handleShow2}></img>
                 Signed in as: {this.props.user.username}
             </Navbar.Text>
           </Navbar.Collapse>
@@ -243,9 +243,6 @@ checkPrivate(){
           <br/>
           <Button variant="primary" onClick={this.handleShow}>
             Create Event
-          </Button>
-          <Button variant="primary" onClick={this.handleShow2}>
-            Show Invites
           </Button>
 
           <Modal show={this.state.show2} onHide={this.handleClose2}>
