@@ -135,6 +135,8 @@ acceptInvite(param1, param2, param3, e){
   .then(response => response.text())
   .then(response => alert(response))
   this.getInvites();
+  this.getInvites();
+  this.getInvites();
   this.handleClose2();
 }
 
