@@ -228,3 +228,19 @@ html, body {margin:0;padding:0;height:100%;}
   background-color: lightgreen !important;
   border-color: lightgreen !important;
 }
+
+.invitebuttonaccept {
+  cursor: pointer;
+}
+
+.invitebuttonaccept:hover, .invitebuttondeny:hover {
+  outline-color: orangered;
+  outline-width: thin;
+  outline-style: solid;
+  background-color: rgb(104, 177, 104);
+}
+
+.invitebuttondeny {
+  cursor: pointer;
+}
+

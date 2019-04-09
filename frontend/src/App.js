@@ -124,7 +124,7 @@ class App extends Component {
 }
 
 renderInvites = ({username, name, invite_id, event_id, invited_user_id}) => {
-  return <tr onClick={this.acceptInvite.bind(this, invite_id, event_id, invited_user_id)}><th key={invite_id}>You were invited by: {username} to the event: {name}</th></tr>
+  return <tr><td key={invite_id}>You were invited by: {username} to the event: {name}</td><td className="invitebuttonaccept" onClick={this.acceptInvite.bind(this, invite_id, event_id, invited_user_id)}>Accept</td><td className="invitebuttondeny" onClick={this.denyInvite.bind(this, invite_id, event_id, invited_user_id)}>Deny</td></tr>
 }
 
 acceptInvite(param1, param2, param3, e){
@@ -132,6 +132,19 @@ acceptInvite(param1, param2, param3, e){
   console.log(param2);
   console.log(param3);
   Auth.fetch1(`http://localhost:8080/invite/accept?invite_id=${param1}&event_id=${param2}&user_id=${param3}`)
+  .then(response => response.text())
+  .then(response => alert(response))
+  this.getInvites();
+  this.getInvites();
+  this.getInvites();
+  this.handleClose2();
+}
+
+denyInvite(param1, param2, param3, e){
+  console.log(param1);
+  console.log(param2);
+  console.log(param3);
+  Auth.fetch1(`http://localhost:8080/invite/deny?invite_id=${param1}`)
   .then(response => response.text())
   .then(response => alert(response))
   this.getInvites();
@@ -271,7 +284,7 @@ checkPrivate(){
               <Table striped bordered hover>
                 <thead>
                   <tr>
-                    <th>
+                    <th colSpan="3">
                       Invites
                     </th>
                   </tr>

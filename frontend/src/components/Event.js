@@ -89,7 +89,7 @@ class Event extends Component {
 
     renderInvites = ({username, name, invite_id, event_id, invited_user_id}) => {
         this.getInvites();
-        return <tr onClick={this.acceptInvite.bind(this, invite_id, event_id, invited_user_id)}><th key={invite_id}>You were invited by: {username} to the event: {name}</th></tr>
+        return <tr><th key={invite_id}>You were invited by: {username} to the event: {name}</th><th onClick={this.acceptInvite.bind(this, invite_id, event_id, invited_user_id)}>Accept</th><th onClick={this.acceptInvite.bind(this, invite_id)}>Deny</th></tr>
       }
       
       acceptInvite(param1, param2, param3, e){
@@ -98,6 +98,14 @@ class Event extends Component {
         .then(response => alert(response))
         .then(this.getInvites())
         .then(this.handleClose2())
+      }
+
+      denyInvite(param1, e) {
+          Auth.fetch1(`http://localhost:8080/invite/deny?invite_id=${param1}`)
+          .then(response=> response.text())
+          .then(response => alert(response))
+          .then(this.getInvites())
+          .then(this.handleClose2())
       }
 
       handleClose2() {

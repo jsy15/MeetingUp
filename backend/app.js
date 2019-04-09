@@ -290,7 +290,7 @@ app.get('/events/add', jwtMW, (req, res) => {
     const GET_USERID_FROM_USERNAME_QUERY = `SELECT user_id FROM users WHERE username = '${username}'`;
     console.log(GET_USERID_FROM_USERNAME_QUERY);
     connection.query(GET_USERID_FROM_USERNAME_QUERY, (err, results)=>{
-      if(err){
+    if(err){
         return res.send(err);
       }
       else if(results.length > 0){
@@ -300,7 +300,7 @@ app.get('/events/add', jwtMW, (req, res) => {
         console.log(INVITE_USER_QUERY);
         connection.query(INVITE_USER_QUERY, (err, results)=>{
           if(err){
-            return res.send(err);
+            return res.send("Error inviting the user. Make sure you are not inviting a duplicate user or try again later.");
           }
           else {
             return res.send("Successfully invited the user");
@@ -353,7 +353,15 @@ app.get('/events/add', jwtMW, (req, res) => {
   app.get('/invite/deny', (req ,res) => {
     const { invite_id } = req.query;
     const DENY_INVITE_QUERY = `DELETE FROM invitelist WHERE event_id = ${invite_id}`;
-    res.send(DENY_INVITE_QUERY);
+    console.log(DENY_INVITE_QUERY);
+    connection.query(DENY_INVITE_QUERY, (err, results) => {
+      if(err){
+        res.send(err)
+      }
+      else {
+        res.send("Successfully deleted the invite");
+      }
+    });
   });
 
 app.get('/', jwtMW /* Using the express jwt MW here */, (req, res) => {
