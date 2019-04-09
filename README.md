@@ -1,2 +1,2 @@
-# MeetUp
+# MeetingUp
 Senior Capstone Project

@@ -239,7 +239,7 @@ checkPrivate(){
       <div className="App">
       
         <Navbar bg="light" expand="lg" className="navbarcust">
-          <Navbar.Brand>MeetUp</Navbar.Brand>
+          <Navbar.Brand>MeetingUp</Navbar.Brand>
           <Navbar.Collapse className="justify-content-end">
             <Navbar.Text className="justify-content-end">
               <img src={bellicon} className="notificationicon" alt="logo" onClick={this.handleShow2}></img>
