@@ -35,6 +35,7 @@ class App extends Component {
       show2: false,
       events: [],
       invites: [],
+      attending: [],
       event: {
         name: '',
         description: '',
@@ -57,6 +58,11 @@ class App extends Component {
       .then(response => response.json())
       .then(response => this.setState({ events: response.data }))
       .catch(err => console.error(err))
+
+    Auth.fetch1(`http://localhost:8080/attending?user_id=${this.props.user.id}`)
+      .then(response => response.json())
+      .then(response => this.setState({ attending: response.data }))
+      .catch(err => console.log(err))
   }
 
   addEvents = _ => {
@@ -101,23 +107,35 @@ class App extends Component {
 }
 
   renderEvent = ({ event_id, name, description, isprivate, creator_id }) => {
+    var isattending = false;
+    for(var i = 0; i < this.state.attending.length; i++){
+      if(this.state.attending[i].event_id === event_id){
+        isattending = true;
+        console.log("I set true for the event: " + name)
+      }
+    }
+    
     if(this.props.user.id === creator_id && isprivate === 1)
+      return <tr onClick={this.showEvent.bind(this, event_id)}><th key={event_id}>{name}</th><th>{description}</th></tr>
+    else if(this.props.user.id !== creator_id && isprivate === 1 && isattending === true)
       return <tr onClick={this.showEvent.bind(this, event_id)}><th key={event_id}>{name}</th><th>{description}</th></tr>
     else if(isprivate === null || isprivate === 0)
       return <tr onClick={this.showEvent.bind(this, event_id)}><th key={event_id}>{name}</th><th>{description}</th></tr>
 }
 
 renderInvites = ({username, name, invite_id, event_id, invited_user_id}) => {
-  this.getInvites();
   return <tr onClick={this.acceptInvite.bind(this, invite_id, event_id, invited_user_id)}><th key={invite_id}>You were invited by: {username} to the event: {name}</th></tr>
 }
 
 acceptInvite(param1, param2, param3, e){
+  console.log(param1);
+  console.log(param2);
+  console.log(param3);
   Auth.fetch1(`http://localhost:8080/invite/accept?invite_id=${param1}&event_id=${param2}&user_id=${param3}`)
   .then(response => response.text())
   .then(response => alert(response))
-  .then(this.getInvites())
-  .then(this.handleClose2())
+  this.getInvites();
+  this.handleClose2();
 }
 
 
@@ -168,7 +186,8 @@ handleShow() {
 }
 
 handleClose2() {
-  this.setState({ show2: false });
+  this.getInvites();
+  this.setState({ show2: false});
 }
 
 handleShow2() {
@@ -247,7 +266,7 @@ checkPrivate(){
 
           <Modal show={this.state.show2} onHide={this.handleClose2}>
             <Modal.Body className="modal-body-invite">
-              <Table striped borderd hover>
+              <Table striped bordered hover>
                 <thead>
                   <tr>
                     <th>

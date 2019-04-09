@@ -126,6 +126,22 @@ app.get('/events', jwtMW, (req, res) => {
     });
 });
 
+app.get('/attending', (req, res) => {
+  const {event_id, user_id} = req.query;
+  const SELECT_ALL_ATTENDING_QUERY = `SELECT * FROM attending WHERE user_id = ${user_id}`;
+  console.log(SELECT_ALL_ATTENDING_QUERY);
+  connection.query(SELECT_ALL_ATTENDING_QUERY, (err, results) => {
+      if(err) {
+          return res.send(err)
+      }
+      else{
+          return res.json({
+              data:results
+          })
+      }
+  });
+});
+
 app.get('/events/add', jwtMW, (req, res) => {
     const { name, description, private, creator_id } = req.query;
     const INSERT_EVENTS_QUERY = `INSERT INTO events(name, description, isprivate, creator_id) VALUES('${name}', '${description}', ${private}, ${creator_id})`;
@@ -312,7 +328,7 @@ app.get('/events/add', jwtMW, (req, res) => {
     });
   });
 
-  app.get('/invite/accept', (req, res) => {
+  app.get('/invite/accept', jwtMW, (req, res) => {
     const { invite_id, event_id, user_id } = req.query;
     const ACCEPT_INVITE_QUERY = `INSERT INTO attending (\`event_id\`, \`user_id\`) VALUES (${event_id}, ${user_id});`;
     console.log(ACCEPT_INVITE_QUERY);
@@ -332,6 +348,12 @@ app.get('/events/add', jwtMW, (req, res) => {
           });
         }
     });
+  });
+
+  app.get('/invite/deny', (req ,res) => {
+    const { invite_id } = req.query;
+    const DENY_INVITE_QUERY = `DELETE FROM invitelist WHERE event_id = ${invite_id}`;
+    res.send(DENY_INVITE_QUERY);
   });
 
 app.get('/', jwtMW /* Using the express jwt MW here */, (req, res) => {
