@@ -115,12 +115,19 @@ class Event extends Component {
         this.props.history.replace('/')
     }
 
-    removeAttendee(user_id) {
+    removeAttendee(user_id, e) {
         alert("Remove user_id: " + user_id + " From Event")
     }
 
+    canRemove(e, user_id) {
+        console.log(user_id);
+        if(this.props.user.id === this.state.creator_id && this.props.user.id !== user_id){
+            return <button onClick={this.removeAttendee.bind(this, user_id)}>X</button>
+        }
+    }
+
     renderEvent = ({username, user_id}) => {
-        return <div>Username: {username} <button onClick={this.removeAttendee.bind(this, user_id)}>X</button></div>
+        return <div>Username: {username} {this.canRemove(this, user_id)}</div>
     }
 
     isAddress() {
