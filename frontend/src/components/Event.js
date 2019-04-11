@@ -27,6 +27,8 @@ class Event extends Component {
           conditionalrenderran: false,
           ownerofevent: false,
           ownerOfEvent: -1,
+          eventaddress: "",
+          showMap: false,
         };
       }
 
@@ -58,7 +60,7 @@ class Event extends Component {
         .then(response => response.json())
         .then(response => {
             const new_creator = response.data[0].creator_id;
-            this.setState({ creator_id: new_creator, event_id: response.data[0].event_id, event_name: response.data[0].name, event_description: response.data[0].description }, () => {
+            this.setState({ creator_id: new_creator, event_id: response.data[0].event_id, event_name: response.data[0].name, event_description: response.data[0].description, eventaddress: response.data[0].address }, () => {
                 this.getCreator();
                 this.getAttending();
             });
@@ -114,6 +116,36 @@ class Event extends Component {
 
     renderEvent = ({username}) => {
         return <div>Username: {username} </div>
+    }
+
+    isAddress() {
+        console.log("Address: " + this.state.eventaddress);
+        var addressling = "https://maps.google.com/?q=" + this.state.eventaddress;
+        
+        if (this.state.eventaddress !== null){
+            return <span><a href={addressling}>{this.state.eventaddress}</a>
+            {this.isMap()}
+            <br></br>
+            <button onClick={this.toggleMap.bind(this)}>Toggle Map</button>
+            </span>
+        }
+    }
+
+    toggleMap(){
+        if(this.state.showMap === true)
+            this.setState({ showMap: false})
+        else   
+            this.setState({ showMap: true})
+    }
+
+    isMap() {
+        var embedaddress = "https://www.google.com/maps/embed/v1/place?q=" + this.state.eventaddress + "&key=AIzaSyAeUK5utPz2bbXj97LhEa--My4YT9v3W-A"; 
+        console.log(embedaddress);
+        if(this.state.eventaddress !== null){
+            if(this.state.showMap === true){
+                return <span><br></br><iframe width="300" height="250" frameborder="0" src={embedaddress} allowfullscreen className="maphidden"></iframe></span>
+            }
+        }
     }
 
     inviteUser(){
@@ -173,6 +205,7 @@ class Event extends Component {
                     <div className="eventparent">
                         <div className="eventinfo">
                             <div className="eventPageName">{this.state.event_name}</div><div className="eventPageCreator">By: <span className="eventPageCreatorName">{this.state.creator_name}</span></div>
+                            <span>{this.isAddress()}</span>
                             <hr></hr>
                             <div className="eventPageDescription">{this.state.event_description}</div>
                         </div>
