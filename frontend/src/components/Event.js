@@ -116,7 +116,12 @@ class Event extends Component {
     }
 
     removeAttendee(user_id, e) {
-        alert("Remove user_id: " + user_id + " From Event")
+        Auth.fetch1(`http://localhost:8080/attending/remove?event_id=${this.props.params.eventID}&user_id=${user_id}`)
+        .then(response => response.text())
+        .then(response => {
+            alert(response);
+            window.location.reload()
+        })
     }
 
     canRemove(e, user_id) {

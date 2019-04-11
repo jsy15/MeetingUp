@@ -126,7 +126,7 @@ app.get('/events', jwtMW, (req, res) => {
     });
 });
 
-app.get('/attending', (req, res) => {
+app.get('/attending', jwtMW, (req, res) => {
   const {event_id, user_id} = req.query;
   const SELECT_ALL_ATTENDING_QUERY = `SELECT * FROM attending WHERE user_id = ${user_id}`;
   console.log(SELECT_ALL_ATTENDING_QUERY);
@@ -139,6 +139,29 @@ app.get('/attending', (req, res) => {
               data:results
           })
       }
+  });
+});
+
+app.get('/attending/remove', (req, res) => {
+  const {event_id, user_id} = req.query;
+  const REMOVE_ATTENDING_QUERY = `DELETE FROM attending WHERE event_id = ${event_id} and user_id = ${user_id}`;
+  connection.query(REMOVE_ATTENDING_QUERY, (err, results) => {
+    if(err){
+      return res.send(err)
+    }
+    else {
+      const GET_REMOVED_USERNAME_QUERY = `SELECT username FROM users WHERE user_id = ${user_id}`;
+      connection.query(GET_REMOVED_USERNAME_QUERY, (err, results) => {
+        console.log("query 1: " + REMOVE_ATTENDING_QUERY);
+        console.log("query 2: " + GET_REMOVED_USERNAME_QUERY);
+        if(err){
+          return res.send(err)
+        }
+        else{
+          return res.send("Successfully removed: " + results[0].username);       
+        }
+      });
+    }
   });
 });
 
