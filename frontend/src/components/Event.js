@@ -172,7 +172,8 @@ class Event extends Component {
                 </div>
                     <div className="eventparent">
                         <div className="eventinfo">
-                            <div className="eventPageName">Name: {this.state.event_name}</div><div className="eventPageCreator">By: {this.state.creator_name}</div>
+                            <div className="eventPageName">{this.state.event_name}</div><div className="eventPageCreator">By: <span className="eventPageCreatorName">{this.state.creator_name}</span></div>
+                            <hr></hr>
                             <div className="eventPageDescription">{this.state.event_description}</div>
                         </div>
                         <div className="attendingbarparent">

@@ -115,14 +115,13 @@ html, body {margin:0;padding:0;height:100%;}
 .eventinfo {
   height: 100%;
   width: 80%;
-  background-color: blue !important;
 }
 
 .attendingbarparent {
 
   border: black;
   border-style: solid;
-  border-width: thick !important;
+  border-width: thin !important;
   border-bottom: none;
   border-top: none;
   border-right: none;
@@ -148,22 +147,33 @@ html, body {margin:0;padding:0;height:100%;}
 }
 
 .eventPageName {
-  background-color: orange;
+  text-decoration: underline;
+  font-size: 30px;
 }
 
 .eventPageCreator {
-  background-color: purple;
+  width: 20%;
+  align-self: center;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1%;
+  font-size: 20px;
+}
+
+.eventPageCreatorName {
 }
 
 .eventPageDescription {
-  background-color: blue;
+  overflow-y: auto;
+  margin: auto;  
 }
+
 
 .attendingBar {
   flex: 1;
   height: 100%;
   display: block !important;
-
+  overflow-y: auto;
 }
 
 .privatetooltip{
