@@ -14,6 +14,7 @@ class Event extends Component {
         this.goHome = this.goHome.bind(this);
         this.conditionalRender = this.conditionalRender.bind(this);
         this.inviteUser = this.inviteUser.bind(this);
+        this.removeAttendee = this.removeAttendee.bind(this);   
     
         this.state = {
           event_id: 0,
@@ -114,8 +115,12 @@ class Event extends Component {
         this.props.history.replace('/')
     }
 
-    renderEvent = ({username}) => {
-        return <div>Username: {username} </div>
+    removeAttendee(user_id) {
+        alert("Remove user_id: " + user_id + " From Event")
+    }
+
+    renderEvent = ({username, user_id}) => {
+        return <div>Username: {username} <button onClick={this.removeAttendee.bind(this, user_id)}>X</button></div>
     }
 
     isAddress() {
