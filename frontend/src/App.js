@@ -39,6 +39,7 @@ class App extends Component {
       event: {
         name: '',
         description: '',
+        address: '',
       },
       is_private_state: false,
     };
@@ -84,7 +85,7 @@ class App extends Component {
     if(event.description == ""){
       event.description = "no description given";
     }
-    Auth.fetch1(`http://localhost:8080/events/add?name=${event.name}&description=${event.description}&private=${is_private}&creator_id=${this.props.user.id}`)
+    Auth.fetch1(`http://localhost:8080/events/add?name=${event.name}&description=${event.description}&private=${is_private}&creator_id=${this.props.user.id}&address=${event.address}`)
       .then(this.getEvents)
       .catch(err => console.error(err))
     this.handleClose();
@@ -111,7 +112,6 @@ class App extends Component {
     for(var i = 0; i < this.state.attending.length; i++){
       if(this.state.attending[i].event_id === event_id){
         isattending = true;
-        console.log("I set true for the event: " + name)
       }
     }
     
@@ -258,6 +258,7 @@ checkPrivate(){
             <Modal.Body>
               <textarea className="eventname" id="eventNameText" rows="2" cols="50" placeholder="Put Event Name Here" onChange={e => this.setState({ event: { ...event, name: e.target.value}})}></textarea>
               <textarea className="eventdescription" id="eventDescText" rows="10" cols="50" placeholder="Put Event Description Here" onChange={e => this.setState({event: { ...event, description: e.target.value}})}></textarea>
+              <input className="eventname" id="eventAddrText" placeholder="Put Address Here" onChange={e => this.setState({event: {...event, address: e.target.value}})}></input>
               <OverlayTrigger
                 placement="bottom-right"
                 delay={{ show: 0, hide: 0 }}

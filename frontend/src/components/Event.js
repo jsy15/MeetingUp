@@ -122,7 +122,7 @@ class Event extends Component {
         console.log("Address: " + this.state.eventaddress);
         var addressling = "https://maps.google.com/?q=" + this.state.eventaddress;
         
-        if (this.state.eventaddress !== null){
+        if (this.state.eventaddress !== null && this.state.eventaddress !== "" && this.state.eventaddress !== "undefined"){
             return <span><a href={addressling}>{this.state.eventaddress}</a>
             {this.isMap()}
             <br></br>

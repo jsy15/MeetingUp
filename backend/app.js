@@ -143,8 +143,9 @@ app.get('/attending', (req, res) => {
 });
 
 app.get('/events/add', jwtMW, (req, res) => {
-    const { name, description, private, creator_id } = req.query;
-    const INSERT_EVENTS_QUERY = `INSERT INTO events(name, description, isprivate, creator_id) VALUES('${name}', '${description}', ${private}, ${creator_id})`;
+    const { name, description, private, creator_id, address } = req.query;
+    const INSERT_EVENTS_QUERY = `INSERT INTO events(name, description, isprivate, creator_id, address) VALUES('${name}', '${description}', ${private}, ${creator_id}, '${address}')`;
+    console.log(INSERT_EVENTS_QUERY);
     connection.query(INSERT_EVENTS_QUERY, (err, results) => {
       if(err) {
         return res.send(err)
