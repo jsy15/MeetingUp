@@ -62,11 +62,12 @@ app.post('/login', (req, res) => {
 
     var dataUsername;
     var dataId;
+    var privlevel;
     var validated;
     var today = new Date();
     
     // Use your DB ORM logic here to find user and compare password
-    connection.query(`SELECT username, password, user_id FROM users WHERE username = '${username}'`, (err, results, rows) => {
+    connection.query(`SELECT username, password, user_id, privilege FROM users WHERE username = '${username}'`, (err, results, rows) => {
       if(err) {
         return res.send(err)
       }
@@ -76,11 +77,13 @@ app.post('/login', (req, res) => {
             validated = true;
             dataUsername = results[0].username;
             dataId = results[0].user_id;
+            privlevel = results[0].privilege;
+            console.log("Priv: " + privlevel);
 
               // Finds first username and password match in users array (assumes usernames are unique)
               //var user = users.find(u => username == u.username && password == u.password);
               if (validated) { // User credentials matched (are valid)
-                let token = jwt.sign({ id: dataId, username: dataUsername }, 'keyboard cat 4 ever', { expiresIn: 5000 }); // Sigining the token
+                let token = jwt.sign({ id: dataId, username: dataUsername, priv: privlevel }, 'keyboard cat 4 ever', { expiresIn: 5000 }); // Sigining the token
                 console.log(dataUsername + " has logged on at: " + today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds());
                 res.json({
                     sucess: true,
@@ -206,13 +209,43 @@ app.get('/events/add', jwtMW, (req, res) => {
       if(err) {
         return res.send(err)
       }
-      else{
+      else {
         return res.json({
           data: results
         })
       }
     });
   });
+
+  app.get('/usersadmin', (req, res) => {
+    const SELECT_ALL_ADMINUSERS = 'SELECT * FROM events';
+    console.log(SELECT_ALL_ADMINUSERS);
+    connection.query(SELECT_ALL_ADMINUSERS, (err, results) => {
+      if(err) {
+        return res.send(err)
+      }
+      else {
+        return res.json({
+          data: results
+        })
+      }
+    });
+  });  
+
+  app.get('/eventsadmin', (req, res) => {
+    const SELECT_ALL_ADMINEVENTS = 'SELECT user_id, fname, lname, username, privilege FROM users';
+    console.log(SELECT_ALL_ADMINEVENTS);
+    connection.query(SELECT_ALL_ADMINEVENTS, (err, results) => {
+      if(err) {
+        return res.send(err)
+      }
+      else {
+        return res.json({
+          data: results
+        })
+      }
+    });
+  ;})
 
   app.get('/userscheck', (req, res) => {
     const { password, fname, lname, username } = req.query;

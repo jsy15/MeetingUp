@@ -24,8 +24,8 @@ class App extends Component {
     this.handleClose = this.handleClose.bind(this);
     this.handleClose2 = this.handleClose2.bind(this);
     this.showEvent = this.showEvent.bind(this);
-    this.checkPrivate = this.checkPrivate.bind(this);
     this.getEvents = this.getEvents.bind(this);
+    this.showAdmin = this.showAdmin.bind(this);
 
     this.state = {
       changed: false,
@@ -48,11 +48,26 @@ class App extends Component {
   componentDidMount() {
     this.getEvents();
     this.getInvites();
+    console.log("Priv from App.js: " + this.props.user.priv);
   }
+
+  //Change the page
     
   showEvent(param, e) {
     this.props.history.push(`/event/${param}`);    
   }
+
+  showAdmin() {
+    this.props.history.push(`/admin`);
+  }
+
+  //Handle the logout
+  handleLogout(){
+    Auth.logout()
+    this.props.history.replace('/login');
+  }
+
+  //Fetch from database
 
   getEvents = _ => {
     Auth.fetch1('http://localhost:8080/events')
@@ -65,6 +80,19 @@ class App extends Component {
       .then(response => this.setState({ attending: response.data }))
       .catch(err => console.log(err))
   }
+
+  getInvites () {
+    Auth.fetch1(`http://localhost:8080/invite/show?user_id=${this.props.user.id}`)
+    .then(response => response.json())
+    .then(response => {
+        this.setState({ invites: response.data}, () => {
+          console.log(this.state.invites);
+        });
+    })
+  }
+
+
+  //Push to database
 
   addEvents = _ => {
     var { event, is_private_state } = this.state;
@@ -93,19 +121,33 @@ class App extends Component {
     this.setState({ is_private_state: false});
   }
 
-  verifyUser = _ => {
-    
+  acceptInvite(param1, param2, param3, e){
+    console.log(param1);
+    console.log(param2);
+    console.log(param3);
+    Auth.fetch1(`http://localhost:8080/invite/accept?invite_id=${param1}&event_id=${param2}&user_id=${param3}`)
+    .then(response => response.text())
+    .then(response => alert(response))
+    this.getInvites();
+    this.getInvites();
+    this.getInvites();
+    this.handleClose2();
   }
+  
+  denyInvite(param1, param2, param3, e){
+    console.log(param1);
+    console.log(param2);
+    console.log(param3);
+    Auth.fetch1(`http://localhost:8080/invite/deny?invite_id=${param1}`)
+    .then(response => response.text())
+    .then(response => alert(response))
+    this.getInvites();
+    this.getInvites();
+    this.getInvites();
+    this.handleClose2();
+  }  
 
-  getInvites () {
-    Auth.fetch1(`http://localhost:8080/invite/show?user_id=${this.props.user.id}`)
-    .then(response => response.json())
-    .then(response => {
-        this.setState({ invites: response.data}, () => {
-          console.log(this.state.invites);
-        });
-    })
-}
+  //Render functions
 
   renderEvent = ({ event_id, name, description, isprivate, creator_id }) => {
     var isattending = false;
@@ -121,116 +163,52 @@ class App extends Component {
       return <tr onClick={this.showEvent.bind(this, event_id)}><th key={event_id}>{name}</th><th>{description}</th></tr>
     else if(isprivate === null || isprivate === 0)
       return <tr onClick={this.showEvent.bind(this, event_id)}><th key={event_id}>{name}</th><th>{description}</th></tr>
-}
-
-renderInvites = ({username, name, invite_id, event_id, invited_user_id}) => {
-  return <tr><td key={invite_id}>You were invited by: {username} to the event: {name}</td><td className="invitebuttonaccept" onClick={this.acceptInvite.bind(this, invite_id, event_id, invited_user_id)}>Accept</td><td className="invitebuttondeny" onClick={this.denyInvite.bind(this, invite_id, event_id, invited_user_id)}>Deny</td></tr>
-}
-
-acceptInvite(param1, param2, param3, e){
-  console.log(param1);
-  console.log(param2);
-  console.log(param3);
-  Auth.fetch1(`http://localhost:8080/invite/accept?invite_id=${param1}&event_id=${param2}&user_id=${param3}`)
-  .then(response => response.text())
-  .then(response => alert(response))
-  this.getInvites();
-  this.getInvites();
-  this.getInvites();
-  this.handleClose2();
-}
-
-denyInvite(param1, param2, param3, e){
-  console.log(param1);
-  console.log(param2);
-  console.log(param3);
-  Auth.fetch1(`http://localhost:8080/invite/deny?invite_id=${param1}`)
-  .then(response => response.text())
-  .then(response => alert(response))
-  this.getInvites();
-  this.getInvites();
-  this.getInvites();
-  this.handleClose2();
-}
-
-
-
-getTest = _ => {
-  //var messagetest = "";
-  console.log('tripped');
-  Auth.fetch1('http://localhost:8080/testroute')
-  .then(response => {
-    console.log(response["test1"]);
-    var messagetest = response["test1"];
-    console.log("fucking work: ", messagetest);
-    this.setState({test1: response});
-    const element = (
-      <div>
-        {messagetest}
-      </div>
-    );
-    ReactDOM.render(element, document.getElementById('hailmarry'));
-  })
-  //.then(reponse => console.log(messagetest.test1))
-  //.then(response => this.setState({ test1: `${response.test1 }`))
-  .catch(err => console.error(err))
-}
-
-renderTest = () => <div>{test.string}</div>
-
-  handleLogout(){
-    Auth.logout()
-    this.props.history.replace('/login');
   }
 
-testFunc(){
-  texthold2 = document.getElementById('hailmarry2').textContent;
-  const element = (
-    <div id="hailmarry2">{texthold}</div>
+  renderInvites = ({username, name, invite_id, event_id, invited_user_id}) => {
+    return <tr><td key={invite_id}>You were invited by: {username} to the event: {name}</td><td className="invitebuttonaccept" onClick={this.acceptInvite.bind(this, invite_id, event_id, invited_user_id)}>Accept</td><td className="invitebuttondeny" onClick={this.denyInvite.bind(this, invite_id, event_id, invited_user_id)}>Deny</td></tr>
+  }
+
+  adminPage(){
+    if(this.props.user.priv === 2){
+      return <Button className="adminpage" variant="outline-danger" onClick={this.showAdmin}>Admin</Button>
+    }
+  }
+
+  //Modal functions
+
+  handleClose() {
+    this.setState({ show: false });
+  }
+
+  handleShow() {
+    this.setState({ show: true });
+  }
+
+  handleClose2() {
+    this.getInvites();
+    this.setState({ show2: false});
+  }
+
+  handleShow2() {
+    this.setState({ show2: true });
+  }
+
+  renderTooltip = props => (
+    <div
+      {...props}
+      style={{
+        backgroundColor: 'rgba(0, 0, 0, 0.85)',
+        padding: '2px 10px',
+        color: 'white',
+        zIndex: 50000,
+        borderRadius: 3,
+        ...props.style,
+      }}
+    >
+      Click this if the event should be private.
+    </div>
   );
-  texthold = texthold2;
-  ReactDOM.render(element, document.getElementById('hailmarry2'));
-}
-
-handleClose() {
-  this.setState({ show: false });
-}
-
-handleShow() {
-  this.setState({ show: true });
-}
-
-handleClose2() {
-  this.getInvites();
-  this.setState({ show2: false});
-}
-
-handleShow2() {
-  this.setState({ show2: true });
-}
-
-renderTooltip = props => (
-  <div
-    {...props}
-    style={{
-      backgroundColor: 'rgba(0, 0, 0, 0.85)',
-      padding: '2px 10px',
-      color: 'white',
-      zIndex: 50000,
-      borderRadius: 3,
-      ...props.style,
-    }}
-  >
-    Click this if the event should be private.
-  </div>
-);
-
-checkPrivate(){
-  console.log(this.state.is_private_state);
-}
-
-
-
 
   render() {
     const { events, event, invites} = this.state;
@@ -247,6 +225,7 @@ checkPrivate(){
             </Navbar.Text>
           </Navbar.Collapse>
           <div className="pl-4">
+            {this.adminPage()}  
             <Button className="logout" variant="outline-dark" onClick={this.handleLogout.bind(this)}>Logout</Button>
           </div>
         </Navbar>
