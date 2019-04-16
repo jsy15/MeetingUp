@@ -3,8 +3,6 @@ import '../App.css';
 import AuthService from './AuthService';
 import withAuth from './withAuth';
 import Navbar from 'react-bootstrap/Navbar';
-import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
 import Tab from 'react-bootstrap/Tab';
@@ -17,10 +15,12 @@ class Admin extends Component {
         super(props, context);
         this.getEvents = this.getEvents.bind(this);
         this.getUsers = this.getUsers.bind(this);
+        this.goHome = this.goHome.bind(this);
 
         this.state = {
             adminevents: [],
             adminusers: [],
+            key: 'Users',
         };
     }
     handleLogout(){
@@ -47,10 +47,13 @@ class Admin extends Component {
         this.getUsers();
     }
 
+    goHome() {
+        this.props.history.replace('/')
+    }
+
 
 
     renderEvents = ({ event_id, name, description, creator_id, isprivate, address }) => {
-        console.log({event_id});
         return(
             <tr key={event_id}>
                 <th>
@@ -76,41 +79,20 @@ class Admin extends Component {
     }
 
     renderUsers = ({ user_id, fname, lname, username, privilege }) => {
-        console.log({user_id});
-        return (
-            <tr key={user_id}>
-                <th>
-                    {user_id}
-                </th>
-                <th>
-                    {fname}
-                </th>
-                <th>
-                    {lname}
-                </th>
-                <th>
-                    {username}
-                </th>
-                <th>
-                    {privilege}
-                </th>
-            </tr>
-        )
+        return <tr key={user_id}><th>{user_id}</th><th>{fname}</th><th>{lname}</th><th>{username}</th><th>{privilege}</th></tr>
+        
     }
+
 
 
     render() {
         const { adminusers, adminevents } = this.state;
 
-        console.log(this.state);
-        console.log(adminevents);
-        console.log(adminusers);
-
         return (
         <div className="App">
         
             <Navbar bg="light" expand="lg" className="navbarcust">
-            <Navbar.Brand>MeetingUp</Navbar.Brand>
+            <Navbar.Brand onClick={this.goHome} className="homebutton">MeetingUp</Navbar.Brand>
             <Navbar.Collapse className="justify-content-end">
                 <Navbar.Text className="justify-content-end">
                     Signed in as: {this.props.user.username}
@@ -121,7 +103,7 @@ class Admin extends Component {
             </div>
             </Navbar>
 
-            <Tabs defaultActiveKey="Users" id="uncontrolled-admin-tab">
+            <Tabs defaultActiveKey="Users" id="controlled-admin-tab" activeKey={this.state.key} onSelect={key => {this.setState({key}); this.getEvents(); this.getUsers();}}>
                 <Tab eventKey="Users" title="Users">
                     <Table striped bordered hover>
                         <thead>
@@ -130,7 +112,7 @@ class Admin extends Component {
                                 <th>First Name</th>
                                 <th>Last Name</th>
                                 <th>Username</th>
-                                <th>Privilege</th>
+                                <th>Privilege Level</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -139,7 +121,7 @@ class Admin extends Component {
                     </Table>
                 </Tab>
                 <Tab eventKey="Events" title="Events">
-                    <Table striped bordered hover>
+                    <Table striped bordered hover size="md">
                         <thead>
                             <tr>
                                 <th>Event_ID</th>

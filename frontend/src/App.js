@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import './App.css';
 import AuthService from './components/AuthService';
 import withAuth from './components/withAuth';
-import ReactDOM from 'react-dom';
 import Table from 'react-bootstrap/Table';
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
@@ -10,9 +9,6 @@ import Modal from 'react-bootstrap/Modal';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import bellicon from './images/bell-alarm-symbol.svg';
 const Auth = new AuthService();
-
-var texthold = "Ha Ha Ha Ha I got it baby";
-var texthold2 = "";
 
 class App extends Component {
 

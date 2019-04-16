@@ -160,7 +160,7 @@ class Event extends Component {
         console.log(embedaddress);
         if(this.state.eventaddress !== null){
             if(this.state.showMap === true){
-                return <span><br></br><iframe width="300" height="250" frameborder="0" src={embedaddress} allowfullscreen className="maphidden"></iframe></span>
+                return <span><br></br><iframe width="300" height="250" frameborder="0" src={embedaddress} allowfullscreen className="maphidden" title="EventMap"></iframe></span>
             }
         }
     }

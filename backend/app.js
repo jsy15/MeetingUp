@@ -217,7 +217,7 @@ app.get('/events/add', jwtMW, (req, res) => {
     });
   });
 
-  app.get('/usersadmin', (req, res) => {
+  app.get('/eventsadmin', (req, res) => {
     const SELECT_ALL_ADMINUSERS = 'SELECT * FROM events';
     console.log(SELECT_ALL_ADMINUSERS);
     connection.query(SELECT_ALL_ADMINUSERS, (err, results) => {
@@ -232,7 +232,7 @@ app.get('/events/add', jwtMW, (req, res) => {
     });
   });  
 
-  app.get('/eventsadmin', (req, res) => {
+  app.get('/usersadmin', (req, res) => {
     const SELECT_ALL_ADMINEVENTS = 'SELECT user_id, fname, lname, username, privilege FROM users';
     console.log(SELECT_ALL_ADMINEVENTS);
     connection.query(SELECT_ALL_ADMINEVENTS, (err, results) => {
