@@ -74,12 +74,15 @@ class Admin extends Component {
                 <th>
                     {address}
                 </th>
+                <th>
+                    <Button variant="danger">X</Button>
+                </th>
             </tr>
         )
     }
 
     renderUsers = ({ user_id, fname, lname, username, privilege }) => {
-        return <tr key={user_id}><th>{user_id}</th><th>{fname}</th><th>{lname}</th><th>{username}</th><th>{privilege}</th></tr>
+        return <tr key={user_id}><th>{user_id}</th><th>{fname}</th><th>{lname}</th><th>{username}</th><th>{privilege}</th><th><Button variant="danger">X</Button></th></tr>
         
     }
 
@@ -113,6 +116,7 @@ class Admin extends Component {
                                 <th>Last Name</th>
                                 <th>Username</th>
                                 <th>Privilege Level</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -130,6 +134,7 @@ class Admin extends Component {
                                 <th>Creator_ID</th>
                                 <th>Private?</th>
                                 <th>Address</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
