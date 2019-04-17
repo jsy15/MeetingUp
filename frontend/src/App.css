@@ -1,4 +1,4 @@
-html, body {margin:0;padding:0;height:100%;}
+html, body {margin:0;padding:0;height:100%;background-color: darkseagreen;}
 
 
 #root {
@@ -13,6 +13,25 @@ html, body {margin:0;padding:0;height:100%;}
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 80px;
+}
+
+.caret {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 2px;
+  vertical-align: middle;
+  border-top: 4px dashed;
+  border-top: 4px solid \9;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+}
+
+.dropup .caret, .navbar-fixed-bottom .dropdown .caret {
+  border-top: 0;
+  border-bottom: 4px dashed;
+  border-bottom: 4px solid \9;
+  content: "";
 }
 
 .notificationicon {
@@ -64,7 +83,7 @@ html, body {margin:0;padding:0;height:100%;}
 }
 
 .navbarcust {
-  background-color: darkolivegreen !important;
+  background-color: darkolivegreen;
 }
 
 .navbar,
@@ -178,6 +197,11 @@ html, body {margin:0;padding:0;height:100%;}
 
 .privatetooltip{
   width:fit-content;
+}
+
+.disabledbuttoncustom {
+  pointer-events: none;
+  opacity: 0.5;
 }
 
 .invitepeoplebutton {

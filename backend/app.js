@@ -113,7 +113,12 @@ app.post('/login', (req, res) => {
 app.get('/testroute', jwtMW, (req, res) => {
     const basemessage = 'go to /events to see events \ngo to /users to see users';
     res.send({test1: `${basemessage}`});
-  });
+});
+
+app.get('/test', jwtMW, (req, res) => {
+  const {user_id} = req.query;
+  return res.send("Return from backend: " + {user_id});
+});
 
 app.get('/events', jwtMW, (req, res) => {
     const SELECT_ALL_EVENTS_QUERY = 'SELECT * FROM events';
@@ -218,7 +223,7 @@ app.get('/events/add', jwtMW, (req, res) => {
   });
 
   app.get('/eventsadmin', (req, res) => {
-    const SELECT_ALL_ADMINUSERS = 'SELECT * FROM events';
+    const SELECT_ALL_ADMINUSERS = 'SELECT event_id, name, description, username, isprivate, address FROM events, users WHERE events.creator_id = users.user_id';
     console.log(SELECT_ALL_ADMINUSERS);
     connection.query(SELECT_ALL_ADMINUSERS, (err, results) => {
       if(err) {
@@ -230,7 +235,22 @@ app.get('/events/add', jwtMW, (req, res) => {
         })
       }
     });
-  });  
+  });
+
+  app.get('/searchuser', (req, res) => {
+    const { term } = req.query;
+    const SEARCH_USER_QUERY = `SELECT user_id, fname, lname, username, privilege FROM users WHERE user_id LIKE '%${term}%' OR fname LIKE '%${term}%' OR lname LIKE '%${term}%' OR username LIKE '%${term}%' OR privilege LIKE '%${term}%';`
+    connection.query(SEARCH_USER_QUERY, (err, results) => {
+      if(err){
+        return res.send(err)
+      }
+      else {
+        return res.json({
+          data: results
+        })
+      }
+    });
+  });
 
   app.get('/usersadmin', (req, res) => {
     const SELECT_ALL_ADMINEVENTS = 'SELECT user_id, fname, lname, username, privilege FROM users';
@@ -245,7 +265,80 @@ app.get('/events/add', jwtMW, (req, res) => {
         })
       }
     });
-  ;})
+  });
+
+  app.get('/userdeleteadmin', (req, res) => {
+    const { user_id } = req.query;
+    const USER_DELETE_ADMIN_QUERY = `DELETE FROM users WHERE user_id = ${user_id}`;
+    const USEREVENTS_DELETE_ADMIN_QUERY = `DELETE FROM events WHERE creator_id = ${user_id}`;
+    const USERATTENDING_DELETE_ADMIN_QUERY = `DELETE FROM attending WHERE user_id = ${user_id}`;
+    const USERINVITE_DELETE_ADMIN_QUERY = `DELETE FROM invitelist WHERE invited_user_id = ${user_id} or sender_user_id = ${user_id}`;
+    console.log("Query: " + USERINVITE_DELETE_ADMIN_QUERY);
+    connection.query(USERINVITE_DELETE_ADMIN_QUERY, (err, results) => {
+      if(err) {
+        return res.send(err)
+      }
+      else {
+        console.log("Query: " + USERATTENDING_DELETE_ADMIN_QUERY);
+        connection.query(USERATTENDING_DELETE_ADMIN_QUERY, (err, results) => {
+            if(err) {
+              return res.send(err)
+            }
+            else {
+              console.log("Query: " + USEREVENTS_DELETE_ADMIN_QUERY);
+              connection.query(USEREVENTS_DELETE_ADMIN_QUERY, (err, results) => {
+                if(err) {
+                  return res.send(err)
+                }
+                else {
+                  console.log("Query: " + USER_DELETE_ADMIN_QUERY);
+                  connection.query(USER_DELETE_ADMIN_QUERY, (err, results) => {
+                    if (err) {
+                      return res.send(err)
+                    }
+                    else {
+                      return res.send("Successfully deleted the user and all their invites and events");
+                    }
+                  });
+                }
+              });
+            }
+        });
+      }
+    });
+  });
+
+  app.get('/eventdeleteadmin', (req, res) => {
+    const { event_id } = req.query;
+    const EVENTS_DELETE_ADMIN_QUERY = `DELETE FROM events WHERE event_id = ${event_id}`;
+    const EVENTSATTENDING_DELETE_ADMIN_QUERY = `DELETE FROM attending WHERE event_id = ${event_id}`;
+    const EVENTSINVITE_DELETE_ADMIN_QUERY = `DELETE FROM invitelist WHERE event_id = ${event_id}`;
+    console.log("Query: " + EVENTSINVITE_DELETE_ADMIN_QUERY);
+    connection.query(EVENTSINVITE_DELETE_ADMIN_QUERY, (err, results) => {
+      if(err) {
+        return res.send(err)
+      }
+      else {
+        console.log("Query: " + EVENTSATTENDING_DELETE_ADMIN_QUERY);
+        connection.query(EVENTSATTENDING_DELETE_ADMIN_QUERY, (err, results) => {
+            if(err) {
+              return res.send(err)
+            }
+            else {
+              console.log("Query: " + EVENTS_DELETE_ADMIN_QUERY);
+              connection.query(EVENTS_DELETE_ADMIN_QUERY, (err, results) => {
+                if(err) {
+                  return res.send(err)
+                }
+                else {
+                  return res.send("Successfully deleted the event and all attending or invited");
+                }
+              });
+            }
+        });
+      }
+    });
+  });
 
   app.get('/userscheck', (req, res) => {
     const { password, fname, lname, username } = req.query;
