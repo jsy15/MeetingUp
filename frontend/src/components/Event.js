@@ -210,7 +210,7 @@ class Event extends Component {
         var changeeventprivate = this.state.newprivate;
         console.log("state private old: " + this.state.event_private);
         console.log("New provate: " + this.state.newprivate);
-        if(changeeventprivate === 0 || changeeventprivate == false){
+        if(changeeventprivate === 0 || changeeventprivate === false){
             changeeventprivate = 0;
             this.setState({newprivate: 0});
         }

@@ -396,6 +396,21 @@ app.get('/events/add', jwtMW, (req, res) => {
     });
   });
 
+  app.get('/myevents', (req, res) => {
+    const {user_id} = req.query;
+    const SELECT_USER_EVENTS = `SELECT events.address, events.creator_id, events.description, events.event_id, events.isprivate, events.name FROM events, attending WHERE events.event_id = attending.event_id AND attending.user_id = ${user_id}`;
+    connection.query(SELECT_USER_EVENTS, (err, results) => {
+      if (err){
+        return res.send(err);
+      }
+      else {
+        return res.json({
+          data: results
+        })
+      }
+    });
+  });
+
   app.get('/event/id', jwtMW, (req, res) => {
     console.log(req.query);
     if(req.query.event_id){

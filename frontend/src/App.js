@@ -38,11 +38,13 @@ class App extends Component {
         address: '',
       },
       is_private_state: false,
+      my_events: false,
     };
   }
 
   componentDidMount() {
-    this.getEvents();
+    if(this.state.my_events === false)
+      this.getEvents();
     this.getInvites();
     console.log("Priv from App.js: " + this.props.user.priv);
   }
@@ -75,6 +77,13 @@ class App extends Component {
       .then(response => response.json())
       .then(response => this.setState({ attending: response.data }))
       .catch(err => console.log(err))
+  }
+
+  getUserEvents() {
+    this.setState({ my_events: true});
+    Auth.fetch1(`http://localhost:8080/myevents?user_id=${this.props.user.id}`)
+    .then(response => response.json())
+    .then(response => this.setState({events: response.data}))
   }
 
   getInvites () {
@@ -255,6 +264,13 @@ class App extends Component {
             Create Event
           </Button>
 
+          <Button variant="info" onClick={() => this.getUserEvents()}>
+            My Events
+          </Button>
+          <Button variant="success" onClick={() => this.getEvents()}>
+            Get All Events
+          </Button>
+          
           <Modal show={this.state.show2} onHide={this.handleClose2}>
             <Modal.Body className="modal-body-invite">
               <Table striped bordered hover>
