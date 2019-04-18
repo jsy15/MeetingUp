@@ -115,6 +115,21 @@ app.get('/testroute', jwtMW, (req, res) => {
     res.send({test1: `${basemessage}`});
 });
 
+app.get('/profile', jwtMW, (req, res) => {
+  const { user_id } = req.query;
+  const GET_USER_INFO_QUERY = `SELECT username, fname, lname FROM users WHERE user_id = ${user_id}`;
+  connection.query(GET_USER_INFO_QUERY, (err, results) => {
+    if(err){
+      return res.send(err)
+    }
+    else {
+      return res.json({
+        data: results
+      })
+    }
+  });
+});
+
 app.get('/test', jwtMW, (req, res) => {
   const {user_id} = req.query;
   return res.send("Return from backend: " + {user_id});

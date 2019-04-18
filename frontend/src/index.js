@@ -11,6 +11,7 @@ import Login from './components/Login';
 import CreateAcc from './components/CreateAccount';
 import event from './components/Event';
 import admin from './components/Admin';
+import profile from './components/Profile';
 
 ReactDOM.render(
     <Router>
@@ -20,6 +21,7 @@ ReactDOM.render(
             <Route exact path="/createaccount" component={CreateAcc} />
             <Route exact path="/event/:eventID" component={event} />
             <Route exact path="/admin" component={admin} />
+            <Route exact path="/profile" component={profile} />
         </div>
     </Router>
     , document.getElementById('root')

@@ -59,6 +59,10 @@ class App extends Component {
     this.props.history.push(`/admin`);
   }
 
+  showProfile(){
+    this.props.history.push(`/profile`);
+  }
+
   //Handle the logout
   handleLogout(){
     Auth.logout()
@@ -229,7 +233,7 @@ class App extends Component {
           <Navbar.Collapse className="justify-content-end">
             <Navbar.Text className="justify-content-end">
               <img src={bellicon} className="notificationicon" alt="logo" onClick={this.handleShow2}></img>
-                Signed in as: {this.props.user.username}
+                <span className="profilebutton" onClick={() => this.showProfile()}>Signed in as: {this.props.user.username}</span>
             </Navbar.Text>
           </Navbar.Collapse>
           <div className="pl-4">

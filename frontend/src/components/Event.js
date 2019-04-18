@@ -56,11 +56,15 @@ class Event extends Component {
     handleLogout(){
         Auth.logout()
         this.props.history.replace('/login');
-      }
+    }
 
-      testEvent(){
-          console.log(this.state.creator_id);
-      }
+    testEvent(){
+        console.log(this.state.creator_id);
+    }
+
+    showProfile(){
+        this.props.history.push(`/profile`);
+    }
 
     getEvents() {
         var event_id = this.props.params.eventID;
@@ -302,8 +306,7 @@ class Event extends Component {
                     <Navbar.Brand onClick={this.goHome} className="homebutton">MeetingUp</Navbar.Brand>
                     <Navbar.Collapse className="justify-content-end">
                         <Navbar.Text className="justify-content-end">
-                            Signed in as: {this.props.user.username}
-                        </Navbar.Text>
+                            <span className="profilebutton" onClick={() => this.showProfile()}>Signed in as: {this.props.user.username}</span>                        </Navbar.Text>
                     </Navbar.Collapse>
                     <div className="pl-4">
                         <Button className="logout" variant="outline-dark" onClick={this.handleLogout.bind(this)}>Logout</Button>

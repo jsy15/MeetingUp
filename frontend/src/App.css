@@ -8,6 +8,7 @@ html, body {margin:0;padding:0;height:100%;background-color: darkseagreen;}
 .App {
   text-align: center;
   background-color: darkseagreen;
+  height: 100vh;
 }
 
 .App-logo {

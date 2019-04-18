@@ -37,6 +37,10 @@ class Admin extends Component {
         this.props.history.replace('/login');
     }
 
+    showProfile(){
+        this.props.history.push(`/profile`);
+    }
+
     getEvents () {
         Auth.fetch1('http://localhost:8080/eventsadmin')
         .then(response => response.json())
@@ -250,7 +254,7 @@ class Admin extends Component {
             <Navbar.Brand onClick={this.goHome} className="homebutton">MeetingUp</Navbar.Brand>
             <Navbar.Collapse className="justify-content-end">
                 <Navbar.Text className="justify-content-end">
-                    Signed in as: {this.props.user.username}
+                    <span className="profilebutton" onClick={() => this.showProfile()}>Signed in as: {this.props.user.username}</span>
                 </Navbar.Text>
             </Navbar.Collapse>
             <div className="pl-4">
