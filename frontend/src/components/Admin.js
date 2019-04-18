@@ -90,7 +90,7 @@ class Admin extends Component {
     renderEvents = ({ event_id, name, description, username, isprivate, address }) => {
         if (isprivate === 1){
             return(
-                <tr key={event_id}>
+                <tr key={event_id} onClick={() => this.clickOnEvent(event_id)}>
                     <th>
                         {event_id}
                     </th>
@@ -117,7 +117,7 @@ class Admin extends Component {
         }
         else {
             return(
-                <tr key={event_id}>
+                <tr key={event_id} onClick={() => this.clickOnEvent(event_id)}>
                     <th>
                         {event_id}
                     </th>
@@ -166,6 +166,10 @@ class Admin extends Component {
         this.setState({searcheventval: param1});
         this.setState({key: "Events"});
         this.searchEventDatabase(param1);
+    }
+
+    clickOnEvent(param1) {
+        this.props.history.push(`/event/${param1}`);
     }
 
     renderTooltip = props => (

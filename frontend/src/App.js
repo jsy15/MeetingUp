@@ -163,11 +163,13 @@ class App extends Component {
     }
     
     if(this.props.user.id === creator_id && isprivate === 1)
-      return <tr onClick={this.showEvent.bind(this, event_id)}><th key={event_id}>{name}</th><th>{description}</th></tr>
+      return <tr onClick={this.showEvent.bind(this, event_id)}><th key={event_id}>{name}</th><th>{description}</th><th>Owner</th></tr>
+    else if(this.props.user.id === creator_id && isprivate === 0)
+      return <tr onClick={this.showEvent.bind(this, event_id)}><th key={event_id}>{name}</th><th>{description}</th><th>Owner</th></tr>
     else if(this.props.user.id !== creator_id && isprivate === 1 && isattending === true)
-      return <tr onClick={this.showEvent.bind(this, event_id)}><th key={event_id}>{name}</th><th>{description}</th></tr>
+      return <tr onClick={this.showEvent.bind(this, event_id)}><th key={event_id}>{name}</th><th>{description}</th><th>Attending</th></tr>
     else if(isprivate === null || isprivate === 0)
-      return <tr onClick={this.showEvent.bind(this, event_id)}><th key={event_id}>{name}</th><th>{description}</th></tr>
+      return <tr onClick={this.showEvent.bind(this, event_id)}><th key={event_id}>{name}</th><th>{description}</th><th>Not Attending</th></tr>
   }
 
   renderInvites = ({username, name, invite_id, event_id, invited_user_id}) => {
@@ -198,6 +200,7 @@ class App extends Component {
   handleShow2() {
     this.setState({ show2: true });
   }
+  
 
   renderTooltip = props => (
     <div
@@ -297,6 +300,7 @@ class App extends Component {
               <tr>
                 <th>Event Name</th>
                 <th>Event Description</th>
+                <th>Status</th>
               </tr>
             </thead>
             <tbody>
