@@ -222,6 +222,21 @@ app.get('/events/add', jwtMW, (req, res) => {
     });
   });
 
+  app.get('/searchevent', (req, res) => {
+    const { term } = req.query;
+    const SEARCH_EVENT_QUERY = `SELECT event_id, name, description, username, isprivate, address FROM events, users WHERE events.creator_id = users.user_id AND (event_id LIKE '%${term}%' OR name like '%${term}%' OR description like '%${term}%' OR username like '%${term}%' OR isprivate like '%${term}%' OR address LIKE '%${term}%');`;
+    connection.query(SEARCH_EVENT_QUERY, (err, results) => {
+      if(err) {
+        return res.send(err)
+      }
+      else {
+        return res.json({
+          data: results
+        })
+      }
+    });
+  });
+
   app.get('/eventsadmin', (req, res) => {
     const SELECT_ALL_ADMINUSERS = 'SELECT event_id, name, description, username, isprivate, address FROM events, users WHERE events.creator_id = users.user_id';
     console.log(SELECT_ALL_ADMINUSERS);
