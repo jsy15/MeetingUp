@@ -34,6 +34,45 @@ html, body {margin:0;padding:0;height:100%;background-color: darkseagreen;}
   content: "";
 }
 
+.editbutton{
+  float: right;
+}
+
+.editModal{
+  position:fixed;
+  z-index: 100;
+    top: 20%;
+    left: 50%;
+    width:100em;
+    height:40em;
+    margin-top: -10em; /*set to a negative number 1/2 of your height*/
+    margin-left: -50em; /*set to a negative number 1/2 of your width*/
+    border: 1px solid #ccc;
+    background-color: #D3B88C;
+    border-style: ridge;
+    border-color: black;
+    border-width: 3px;
+}
+
+.centerEdit{
+  z-index: 40;
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: auto;
+  margin-bottom: auto;
+  left: 0;
+  right: 0;
+}
+
+.eventisprivatestatus{
+  color: red;
+}
+
+.eventisnotprivatestatus{
+  color: blue;
+}
+
 .notificationicon {
   height: 20px;
   padding-right: 30px;

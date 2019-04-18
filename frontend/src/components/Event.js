@@ -4,6 +4,7 @@ import withAuth from './withAuth';
 import AuthService from './AuthService';
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 const Auth = new AuthService();
 
 class Event extends Component {
@@ -20,6 +21,7 @@ class Event extends Component {
           event_id: 0,
           event_name: "",
           event_description: "",
+          event_private: "",
           eventcreator: [],
           event_attendees: [],
           creator_id: 0,
@@ -30,6 +32,11 @@ class Event extends Component {
           ownerOfEvent: -1,
           eventaddress: "",
           showMap: false,
+          editing: false,
+          neweventname: "",
+          neweventdesc: "",
+          neweventaddress: "",
+          newprivate: "",
         };
       }
 
@@ -61,7 +68,7 @@ class Event extends Component {
         .then(response => response.json())
         .then(response => {
             const new_creator = response.data[0].creator_id;
-            this.setState({ creator_id: new_creator, event_id: response.data[0].event_id, event_name: response.data[0].name, event_description: response.data[0].description, eventaddress: response.data[0].address }, () => {
+            this.setState({ creator_id: new_creator, event_id: response.data[0].event_id, event_name: response.data[0].name, event_description: response.data[0].description, eventaddress: response.data[0].address, event_private: response.data[0].isprivate }, () => {
                 this.getCreator();
                 this.getAttending();
             });
@@ -187,6 +194,92 @@ class Event extends Component {
         }
     }
 
+    toggleEditting(){
+        this.setState({ editing: !this.state.editing});
+        console.log("Hello there: " + this.state.neweventname);
+        if(this.state.neweventname === ""){
+            this.state.neweventname = this.state.event_name;
+            this.state.neweventdesc = this.state.event_description;
+            this.state.neweventaddress = this.state.eventaddress;
+            this.state.newprivate = this.state.event_private;
+        }
+        
+    }
+
+    updateEvent(){
+        var changeeventprivate = this.state.newprivate;
+        console.log("state private old: " + this.state.event_private);
+        console.log("New provate: " + this.state.newprivate);
+        if(changeeventprivate === 0 || changeeventprivate == false){
+            changeeventprivate = 0;
+            this.setState({newprivate: 0});
+        }
+        else{
+            changeeventprivate = 1;
+            this.setState({newprivate: 1});
+        }
+        console.log("changeevent: " + changeeventprivate);
+
+        if(this.state.event_name === this.state.neweventname && this.state.event_description === this.state.neweventdesc && this.state.eventaddress === this.state.neweventaddress && this.state.event_private === changeeventprivate){
+            alert("You have not changed the event");
+        }
+        else{
+            Auth.fetch1(`http://localhost:8080/eventchange?event_id=${this.props.params.eventID}&name=${this.state.neweventname}&description=${this.state.neweventdesc}&address=${this.state.neweventaddress}&isprivate=${changeeventprivate}`)
+            .then(response => response.text())
+            .then(response => alert(response))
+            .then(this.getEvents())
+            this.state.event_name = this.state.neweventname;
+            this.state.event_description = this.state.neweventdesc;
+            this.state.eventaddress = this.state.neweventaddress;
+            this.state.event_private = this.state.newprivate;
+            console.log("What: "+ this.state.event_private);
+            
+        }
+        this.getEvents()
+        this.toggleEditting();
+    }
+
+    conditionalEditing(){
+        if(this.state.editing === true){
+            return (
+                <div className="editModal">
+                    <div className="centerEdit">
+                        <input></input><br/>
+                        <input></input><br/>
+                        <input></input><br/>
+                        <input></input><br/>
+                    </div>
+                </div>
+            );
+        }
+        else{
+            return;
+        }
+    }
+
+    conditionalCheckbox(){
+        if(this.state.newprivate === 1)
+            return <div className="privatetooltip"><input type="checkbox" checked className="eventprivate" id="eventPrivateCheck" onClick={e => this.setState({newprivate: e.target.checked})}></input> Private? </div>
+        else
+         return <div className="privatetooltip"><input type="checkbox" className="eventprivate" id="eventPrivateCheck" onClick={e => this.setState({newprivate: e.target.checked})}></input> Private? </div>
+
+    }
+
+    conditonalEditButton(){
+        if(this.props.user.id === this.state.creator_id)
+        return <Button variant="info" onClick={() => {this.toggleEditting()}}>Edit Event</Button>
+
+    }
+
+    checkPrivate(){
+        if(this.state.event_private === 1 && this.state.newprivate ==="")
+            return <span className="eventisprivatestatus">Private</span>
+        else if(this.state.newprivate === 1)
+            return <span className="eventisprivatestatus">Private</span>
+        else 
+            return <span className="eventisnotprivatestatus">Public</span>
+    }
+
     conditionalRender () {
         if(this.state.creator_id !== 0){
             console.log(this.state.event_attendees);
@@ -217,15 +310,37 @@ class Event extends Component {
                     </div>
                     </Navbar>
 
+                    <Modal show={this.state.editing} onHide={this.toggleEditting.bind(this)}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Creating an event:</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <textarea className="eventname" id="eventNameText" rows="2" cols="50" value={this.state.neweventname} onChange={e => this.setState({ neweventname: e.target.value })} onBlur={e => this.setState({ neweventname: e.target.value })} ></textarea>
+                            <textarea className="eventdescription" id="eventDescText" rows="10" cols="50" value={this.state.neweventdesc} onChange={e => this.setState({ neweventdesc: e.target.value})} onBlur={e => this.setState({ neweventdesc: e.target.value})} ></textarea>
+                            <input className="eventname" id="eventAddrText" value={this.state.neweventaddress} onChange={e => this.setState({ neweventaddress: e.target.value })} onBlur={e => this.setState({ neweventaddress: e.target.value })} ></input>
+                            {this.conditionalCheckbox()}
+
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="primary" onClick={() => this.updateEvent()}>
+                                Change Event
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
+
 
                 </div>
                     <div className="eventparent">
                         <div className="eventinfo">
+                        
                             <div className="eventPageName">{this.state.event_name}</div><div className="eventPageCreator">By: <span className="eventPageCreatorName">{this.state.creator_name}</span></div>
+                            {this.checkPrivate()} <br/><br />
                             <span>{this.isAddress()}</span>
+                            {this.conditonalEditButton()}
                             <hr></hr>
                             <div className="eventPageDescription">{this.state.event_description}</div>
                         </div>
+                        
                         <div className="attendingbarparent">
                             {this.conditionalRender()}
                             <div className="attendingBar">{event_attendees.map(this.renderEvent)}
