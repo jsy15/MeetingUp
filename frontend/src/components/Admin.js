@@ -146,11 +146,11 @@ class Admin extends Component {
 
     renderUsers = ({ user_id, fname, lname, username, privilege }) => {
         if(this.props.user.id !== user_id  && privilege !== 2){
-            return <tr key={user_id}><th>{user_id}</th><th>{fname}</th><th>{lname}</th><th>{username}</th><th>User</th><th><Button variant="danger" onClick={this.deleteUser.bind(this, user_id)}>X</Button></th></tr>
+            return <tr key={user_id} onClick={() => this.clickOnUser(username)}><th>{user_id}</th><th>{fname}</th><th>{lname}</th><th>{username}</th><th>User</th><th><Button variant="danger" onClick={this.deleteUser.bind(this, user_id)}>X</Button></th></tr>
         }
         else {
             if(privilege === 2)
-                return <tr key={user_id}><th>{user_id}</th><th>{fname}</th><th>{lname}</th><th>{username}</th><th>Admin</th><th>
+                return <tr key={user_id} onClick={() => this.clickOnUser(username)}><th>{user_id}</th><th>{fname}</th><th>{lname}</th><th>{username}</th><th>Admin</th><th>
                             <OverlayTrigger
                             placement="left-start"
                             delay={{ show: 0, hide: 0 }}
@@ -160,6 +160,12 @@ class Admin extends Component {
                             </OverlayTrigger>
                         </th></tr>
         }
+    }
+
+    clickOnUser(param1) {
+        this.setState({searcheventval: param1});
+        this.setState({key: "Events"});
+        this.searchEventDatabase(param1);
     }
 
     renderTooltip = props => (
@@ -186,11 +192,20 @@ class Admin extends Component {
 
       }
 
-      searchEventDatabase(){
-          console.log("Searching the databse for: " + this.state.searcheventval);
-          Auth.fetch1(`http://localhost:8080/searchevent?term=${this.state.searcheventval}`)
-          .then(response => response.json())
-          .then(response => this.setState({adminevents: response.data}))
+      searchEventDatabase(param1){
+          if(param1 == null){
+            console.log("Searching the databse for: " + this.state.searcheventval);
+            Auth.fetch1(`http://localhost:8080/searchevent?term=${this.state.searcheventval}`)
+            .then(response => response.json())
+            .then(response => this.setState({adminevents: response.data}))
+          }
+          else{
+            console.log("Searching the databse for: " + param1);
+            Auth.fetch1(`http://localhost:8080/searchevent?term=${param1}`)
+            .then(response => response.json())
+            .then(response => this.setState({adminevents: response.data}))
+          }
+          
       }
 
       resetUserSearch() {
