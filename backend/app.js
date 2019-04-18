@@ -448,7 +448,7 @@ app.get('/events/add', jwtMW, (req, res) => {
 
   app.get('/event/attending', jwtMW, (req, res) => {
     const { event_id } = req.query;
-    const GET_ATTENDING_QUERY = `SELECT username, users.user_id as user_id FROM attending INNER JOIN users ON users.user_id = attending.user_id WHERE attending.event_id = ${event_id}`;
+    const GET_ATTENDING_QUERY = `SELECT username, users.user_id as user_id FROM attending INNER JOIN users ON users.user_id = attending.user_id WHERE attending.event_id = ${event_id} order by attending.attending_id asc`;
     console.log(GET_ATTENDING_QUERY);
     connection.query(GET_ATTENDING_QUERY, (err, results) => {
       if(err){
