@@ -224,6 +224,39 @@ app.get('/events/add', jwtMW, (req, res) => {
     });
   });
 
+  app.get('/checkpassword', jwtMW, (req, res) => {
+    const { user_id, password } = req.query;
+    console.log("Password: " + password);
+    const CHECK_PASSWORD_QUERY = `SELECT * FROM users WHERE user_id=${user_id} AND password = '${password}'`;
+    console.log("Password check: " + CHECK_PASSWORD_QUERY);
+    connection.query(CHECK_PASSWORD_QUERY,  (err, results) => {
+      if (err) {
+        return res.send(err)
+      }
+      else if(results.length > 0){
+        console.log("True");
+        return res.send(true);
+      }
+      else {
+        console.log("False");
+        return res.send(false)
+      }
+    });
+  });
+
+  app.get('/updatepassword', jwtMW, (req, res) => {
+    const { user_id, password } = req.query;
+    const UPDATE_PASSWORD_QUERY = `UPDATE users SET password = '${password}' WHERE user_id = ${user_id}`;
+    connection.query(UPDATE_PASSWORD_QUERY, (err, results) =>{
+      if(err){
+        return res.send(err);
+      }
+      else {
+        return res.send("Successfully updated the password");
+      }
+    });
+  });
+
   app.get('/users', jwtMW, (req, res) => {
     connection.query(SELECT_ALL_USERS_QUERY, (err, results) => {
       if(err) {
@@ -407,6 +440,19 @@ app.get('/events/add', jwtMW, (req, res) => {
       }
       else {
         return res.send(`Successfully changed the event`);
+      }
+    });
+  });
+
+  app.get('/userchange', (req, res) => {
+    const { user_id, fname, lname } = req.query;
+    const CHANGE_USER_QUERY = `UPDATE users set fname = '${fname}', lname = '${lname}' WHERE user_id = ${user_id};`;
+    connection.query(CHANGE_USER_QUERY, (err, results) => {
+      if(err){
+        return res.send(err)
+      }
+      else {
+        return res.send("Successfully update user");        
       }
     });
   });

@@ -1,0 +1,11 @@
+.table>tbody>tr>td,
+.table>tbody>tr>th {
+  border-top: none;
+  text-align: center;
+  vertical-align: middle;
+}
+.tableprofile{
+    width: 25%;
+    margin-left: auto;
+    margin-right: auto;
+}
