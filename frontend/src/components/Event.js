@@ -15,7 +15,8 @@ class Event extends Component {
         this.goHome = this.goHome.bind(this);
         this.conditionalRender = this.conditionalRender.bind(this);
         this.inviteUser = this.inviteUser.bind(this);
-        this.removeAttendee = this.removeAttendee.bind(this);   
+        this.removeAttendee = this.removeAttendee.bind(this);
+        this.deleteEvent = this.deleteEvent.bind(this);  
     
         this.state = {
           event_id: 0,
@@ -243,6 +244,17 @@ class Event extends Component {
         this.toggleEditting();
     }
 
+    deleteEvent(){
+        var confirmdelete = window.confirm("Are you sure that you want to delete this event?");
+        console.log(confirmdelete);
+        if(confirmdelete === true){
+            Auth.fetch1(`http://localhost:8080/eventdeleteadmin?event_id=${this.props.params.eventID}`)
+            .then(response => response.text())
+            .then(response => alert(response))
+            .then(this.goHome())
+        }
+    }
+
     conditionalEditing(){
         if(this.state.editing === true){
             return (
@@ -273,6 +285,12 @@ class Event extends Component {
         if(this.props.user.id === this.state.creator_id)
         return <Button variant="info" onClick={() => {this.toggleEditting()}}>Edit Event</Button>
 
+    }
+
+    conditionalDelete(){
+        if(this.state.creator_id === this.props.user.id){
+            return <Button variant="danger" className="eventDeleteButton" onClick={() => this.deleteEvent()} >X</Button>
+        }
     }
 
     checkPrivate(){
@@ -336,7 +354,7 @@ class Event extends Component {
                     <div className="eventparent">
                         <div className="eventinfo">
                         
-                            <div className="eventPageName">{this.state.event_name}</div><div className="eventPageCreator">By: <span className="eventPageCreatorName">{this.state.creator_name}</span></div>
+                            <div className="eventcontainer" ><div className="eventPageName">{this.state.event_name}{this.conditionalDelete()}</div></div><div className="eventPageCreator">By: <span className="eventPageCreatorName">{this.state.creator_name}</span></div>
                             {this.checkPrivate()} <br/><br />
                             <span>{this.isAddress()}</span>
                             {this.conditonalEditButton()}

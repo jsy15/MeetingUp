@@ -43,6 +43,16 @@ html, body {margin:0;padding:0;height:100%;background-color: darkseagreen;}
   float: right;
 }
 
+.eventDeleteButton{
+  position: absolute;
+  right: 5px;
+  top: 5px;
+}
+
+.eventcontainer{
+  position: relative;
+}
+
 .editModal{
   position:fixed;
   z-index: 100;
