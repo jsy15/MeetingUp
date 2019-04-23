@@ -80,6 +80,10 @@ html, body {margin:0;padding:0;height:100%;background-color: darkseagreen;}
   right: 0;
 }
 
+.profilebutton{
+  cursor: pointer;
+}
+
 .profileinfo{
   justify-items: left;
   left: 25%;
